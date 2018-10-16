@@ -1,0 +1,17 @@
+@soft Home_32x32x32.png
+Acrobat Reader 5.0 120_32x32x32.png
+Acrobat Reader 5.0 70_32x32x32.png
+data_32x32x32 13.png
+disney_32x32x32 4.png
+enuk990_32x32x32.png
+linux2.ico_32x32x32.png
+nyt_32x32x32.png
+PC pdf_32x32x32.png
+PDF_32x32x32.png
+REALbasic® 3.2 PPC 8_32x32x32.png
+Sierra_32x32x32 3.png
+sports network neighbourhood_32x32x32.png
+win 98 network neighbourhood_32x32x32.png
+win cd_32x32x32.png
+windows 98 my computer_32x32x32.png
+zdnet_32x32x32 2.png

@@ -1,0 +1,52 @@
+Banner, Hearts_32x32x32.png
+Book ◊_32x32x32.png
+BORG 19.icns_32x32x32.png
+Business Talk_32x32x32.png
+Calculator & Paper_32x32x32.png
+Clock 5_32x32x32.png
+cnn_32x32x32 2.png
+cnnsi_32x32x32.png
+Dog_32x32x32 12.png
+Duck 2_32x32x32.png
+ent_32x32x32.png
+espn_32x32x32.png
+FavorStrip 6_32x32x32.png
+Financial_32x32x32.png
+Flowers 3_32x32x32.png
+FontCat1.3.5 5_32x32x32.png
+Garden, Wheelbarrow_32x32x32.png
+Grey Page Down_32x32x32.png
+heat_32x32x32 3.png
+Jet Fighter_32x32x32 2.png
+leonardo da vinci ntwrk nbrhd_32x32x32.png
+letter_32x32x32 7.png
+linux12.ico_32x32x32.png
+Lock Cells_32x32x32.png
+locked letter_32x32x32.png
+London 2_32x32x32.png
+Man in Jungle 2_32x32x32.png
+Marquee 1_32x32x32 2.png
+Micro_32x32x32.png
+more windows recycle empty_32x32x32.png
+more windows recycle full_32x32x32.png
+MPic.gif_32x32x32.png
+nascar2_32x32x32.png
+no setup_32x32x32.png
+Notepad 4_32x32x32.png
+Paramedics 1_32x32x32.png
+Paris 1_32x32x32.png
+pc dvd_32x32x32.png
+pc letters_32x32x32.png
+pc mountain disk_32x32x32.png
+Phone 3_32x32x32 3.png
+setup_32x32x32 8.png
+Star 2_32x32x32 2.png
+Stork & Baby 1_32x32x32.png
+Stork & Baby 2_32x32x32.png
+Thanksgiving Cartoon_32x32x32.png
+the 60's usa recycle empty_32x32x32.png
+the 60's usa recycle full_32x32x32.png
+Trick or Treat_32x32x32.png
+windows 98 my computer_32x32x32.png
+Woman Calculating_32x32x32.png
+Word 4 Document_32x32x32.png

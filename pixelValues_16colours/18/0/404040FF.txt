@@ -1,0 +1,2 @@
+display_32x32x32 5.png
+windows 98 recycle full_32x32x32.png

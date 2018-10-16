@@ -1,0 +1,27 @@
+Apple Seeding_32x32x32.png
+Blend_32x32x32.png
+clut_32x32x32.png
+Invert_32x32x32.png
+MacZPoint 1.9.2 FAT_32x32x32.png
+Microsoft Clip Gallery 6_32x32x32.png
+Microsoft Office 98 15_32x32x32.png
+Microsoft Office Manager 2_32x32x32.png
+Microsoft Office Manager 3_32x32x32.png
+Microsoft OLE Automation_32x32x32.png
+Microsoft Query 2_32x32x32.png
+Microsoft Query_32x32x32.png
+MS Organization Chart 2.0_32x32x32.png
+MyBattery 5_32x32x32.png
+Outlook Express 41_32x32x32.png
+Outlook Express 5_32x32x32.png
+Pie Chart_32x32x32.png
+pltt_32x32x32.png
+Quicken Home Inventory 10_32x32x32.png
+Quicken Home Inventory 8_32x32x32.png
+ScreenFlip 2_32x32x32.png
+ScreenFlip_32x32x32.png
+SliceWatch 1.0.5_32x32x32.png
+Stacked Area_32x32x32.png
+VBA Localization Library (1) 2_32x32x32.png
+◊CopyPaste 4.3.2 2_32x32x32.png
+◊CopyPaste 4.3.2 3_32x32x32.png

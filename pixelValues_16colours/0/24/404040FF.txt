@@ -1,0 +1,6 @@
+kSaveAttachmentIcon_32x32x32.png
+Plugin Icon_32x32x32 2.png
+Sound Warehouse 2_32x32x32.png
+Sound Warehouse 3_32x32x32.png
+Sound Warehouse 4_32x32x32.png
+Sound Warehouse 5_32x32x32.png

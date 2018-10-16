@@ -1,0 +1,18 @@
+Area Chart_32x32x32.png
+circle_inscale.gif_32x32x32.png
+Draw +_32x32x32.png
+KProDemo 2_32x32x32.png
+ldes_32x32x32.png
+Microsoft Clip Gallery 6_32x32x32.png
+Microsoft Office Manager 2_32x32x32.png
+Microsoft Office Manager 3_32x32x32.png
+Microsoft OLE Automation_32x32x32.png
+Microsoft Query 2_32x32x32.png
+Microsoft Query_32x32x32.png
+MyBattery 5_32x32x32.png
+Pie Chart_32x32x32.png
+RandomDot_32x32x32.png
+ScreenFlip_32x32x32.png
+SliceWatch 1.0.5_32x32x32.png
+Spinning Arrows 5 [NovellBrowse_32x32x32.png
+WorldTime_32x32x32.png

@@ -1,0 +1,49 @@
+abcardwindow_32x32x32.png
+AppleExtra:MajorApplication_32x32x32.png
+audio_32x32x32 7.png
+Back.gif_32x32x32 2.png
+Banner, Hearts_32x32x32.png
+Book ◊_32x32x32.png
+Business Meeting_32x32x32.png
+Cake 1_32x32x32 2.png
+Calculator & Paper_32x32x32.png
+chang_32x32x32.png
+cnn_32x32x32 2.png
+cnnsi_32x32x32.png
+Doctor 2_32x32x32.png
+enuk990_32x32x32.png
+eOrdering_X_1.1.6.app_32x32x32.png
+Flowers 1_32x32x32.png
+Install FreePPP 2.6.2 20_32x32x32.png
+Jazz Group_32x32x32.png
+letter_32x32x32 7.png
+locked letter_32x32x32.png
+Man in Jungle 1_32x32x32.png
+Man in Jungle 2_32x32x32.png
+Micro_32x32x32.png
+miPanic_32x32x32.png
+more windows recycle empty_32x32x32.png
+more windows recycle full_32x32x32.png
+Movable Bar_32x32x32.png
+msg compose window_32x32x32.png
+nascar2_32x32x32.png
+no setup_32x32x32.png
+open door_32x32x32 2.png
+Paris 1_32x32x32.png
+pcn_32x32x32.png
+Phone 3_32x32x32 3.png
+Phone 4_32x32x32 3.png
+Plane 4_32x32x32.png
+profile window_32x32x32 2.png
+Programmer_32x32x32.png
+ras_32x32x32.png
+Recording, Keyboard_32x32x32.png
+Rose 1_32x32x32 2.png
+setup_32x32x32 8.png
+Star 2_32x32x32 2.png
+Sweater_32x32x32.png
+Train 2_32x32x32 2.png
+Wheelchair_32x32x32.png
+windows 98 my computer_32x32x32.png
+windows cd_32x32x32.png
+zdnet_32x32x32 2.png

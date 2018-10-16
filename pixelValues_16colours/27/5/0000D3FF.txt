@@ -1,0 +1,6 @@
+Localized.rsrc_32x32x32.png
+Microsoft Query 3_32x32x32.png
+Microsoft Query 4_32x32x32.png
+Palm Desktop Setup 2_32x32x32.png
+ppt#_32x32x32 2.png
+Visual Basic for Applications 5_32x32x32.png

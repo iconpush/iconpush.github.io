@@ -1,0 +1,61 @@
+Apple Seeding_32x32x32.png
+Application Icon_32x32x32 11.png
+Area Chart_32x32x32.png
+Blue W_32x32x32.png
+Calendar File_32x32x32.png
+Claris Emailer 1.1v3 8_32x32x32.png
+ClarisWorks 4.0 (8Mb) 66_32x32x32.png
+ClarisWorks 4.0 (8Mb) 67_32x32x32.png
+ClarisWorks 4.0 (8Mb) 68_32x32x32.png
+clut_32x32x32.png
+Desktop 109_32x32x32 3.png
+Desktop 40_32x32x32.png
+Desktop 42_32x32x32 2.png
+Desktop 48_32x32x32 5.png
+Desktop 49_32x32x32 4.png
+Desktop 50_32x32x32 5.png
+Desktop 52_32x32x32 2.png
+Desktop 53_32x32x32 2.png
+Desktop 54_32x32x32 3.png
+Desktop 55_32x32x32 2.png
+Edition_32x32x32.png
+GameMaker 2.8 Demo 20_32x32x32.png
+GameMaker v2.61 DEMO 50_32x32x32.png
+GifBuilder 9_32x32x32.png
+Help File_32x32x32 2.png
+Microsoft Clip Gallery 3_32x32x32.png
+Microsoft Office 98 15_32x32x32.png
+MPX File_32x32x32.png
+MyBattery 5_32x32x32.png
+MyBattery 6_32x32x32.png
+Outlook Express 41_32x32x32.png
+Outlook Express 42_32x32x32 2.png
+Outlook Express 5_32x32x32.png
+pltt_32x32x32.png
+ppt#_32x32x32 2.png
+Preferences_32x32x32 6.png
+Quicken Home Inventory 10_32x32x32.png
+Quicken Home Inventory 31_32x32x32.png
+Quicken Home Inventory 33_32x32x32.png
+Quicken Home Inventory 8_32x32x32.png
+READ THIS OR YOU WILL BE KILLED_32x32x32.png
+ScreenFlip 10_32x32x32.png
+ScreenFlip 11_32x32x32.png
+ScreenFlip 12_32x32x32.png
+ScreenFlip 13_32x32x32.png
+ScreenFlip 14_32x32x32.png
+ScreenFlip 15_32x32x32.png
+ScreenFlip 16_32x32x32.png
+ScreenFlip 2_32x32x32.png
+ScreenFlip 3_32x32x32.png
+ScreenFlip 4_32x32x32.png
+ScreenFlip 5_32x32x32.png
+ScreenFlip 6_32x32x32.png
+ScreenFlip 7_32x32x32.png
+ScreenFlip 8_32x32x32.png
+ScreenFlip 9_32x32x32.png
+Stacked Area_32x32x32.png
+Text File_32x32x32.png
+Unbind_32x32x32.png
+View File_32x32x32.png
+Workspace_32x32x32.png

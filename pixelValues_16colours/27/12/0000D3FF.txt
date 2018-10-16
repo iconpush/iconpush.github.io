@@ -1,0 +1,12 @@
+Area Chart_32x32x32.png
+Draw +_32x32x32.png
+KProDemo 2_32x32x32.png
+Microsoft Clip Gallery 6_32x32x32.png
+Microsoft Office 98 18_32x32x32.png
+Pie Chart_32x32x32.png
+ScreenFlip 2_32x32x32.png
+ScreenFlip 3_32x32x32.png
+ScreenFlip 4_32x32x32.png
+ScreenFlip_32x32x32.png
+Stacked Area_32x32x32.png
+VBA Localization Library (1)_32x32x32.png

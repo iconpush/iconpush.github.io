@@ -1,0 +1,4013 @@
+<!--
+	
+	iconPush - An icon drawing program in JavaScript
+	
+	Peter Burkimsher, 2018-09-26
+	peterburk@gmail.com
+	
+	Done: 
+	- Enter pixels on a grid
+	- Choose a colour
+	- Transparency
+	- Export to TXT
+	
+	To do:
+	- Search existing icon database
+	- Export the icon to HTML5 canvas
+	- Export the HTML5 canvas to PNG
+	- Undo
+	- Black & white, 4 Grays, 4 Colours, 16 Grays, 16 Colors, 256 Grays, 256 Colors, Thousands of Colors (4096), Millions of Colors
+	- Other color palettes from https://en.wikipedia.org/wiki/List_of_software_palettes
+	- Pixel art scaling algorithms
+	https://www.imagemagick.org/discourse-server/viewtopic.php?t=23046
+	https://web.archive.org/web/20080731013623/http://www.hiend3d.com/hq3x.html
+	https://web.archive.org/web/20070217060702/http://elektron.its.tudelft.nl:80/~dalikifa/#whatis
+	https://arstechnica.com/civis/viewtopic.php?f=15&t=375914
+	
+-->
+
+<html>
+
+	<head>
+		<title>
+			iconPush - Search icons based on pixel values
+		</title>
+		
+		<style>
+			@font-face {
+				font-family: "Charcoal CY";
+				src: url("fonts/Charcoal.ttf") format("truetype");
+			}
+
+			@font-face {
+				font-family: "Virtue";
+				src: url("fonts/virtue.ttf") format("truetype");
+			}
+
+			@font-face {
+			    font-family: "FranklinGothic-Book";
+			    src: url("fonts/FranklinGothic-Book.ttf") format("truetype");
+			}
+
+			@font-face {
+			    font-family: "Giovanni-Book";
+			    src: url("fonts/Giovanni-Book.otf") format("opentype");
+			}
+			
+			#icon {
+    			background-image:
+			      linear-gradient(45deg, #ccc 25%, transparent 25%), 
+			      linear-gradient(135deg, #ccc 25%, transparent 25%),
+			      linear-gradient(45deg, transparent 75%, #ccc 75%),
+			      linear-gradient(135deg, transparent 75%, #ccc 75%);
+		    	background-size:21px 21px; /* Must be a square */
+			    background-position:0 0, 10.5px 0, 10.5px -10.5px, 0px 10.5px; /* Must be half of one side of the square */
+			}
+			
+			.square {
+			    border: 1px solid black;
+			    width: 20px;
+			    height: 20px;
+			}
+
+			.headingLeft {
+			    border-left: 1px solid white;
+			    border-top: 1px solid white;
+			    border-bottom: 1px solid black;
+			    border-right: 1px solid black;
+			    width: 20px;
+			    height: 20px;
+
+				background-color: #FFFFFF;
+				
+				font-family:sans-serif;
+				font-size:12px;
+			}
+
+			.headingRight {
+			    border-top: 1px solid black;
+			    border-bottom: 1px solid black;
+			    border-right: 1px solid black;
+			    width: 20px;
+			    height: 20px;
+
+				background-color: #FFFFFF;
+				
+				font-family:sans-serif;
+				font-size:12px;
+			}
+			
+
+			.topLeftSide {
+			    border-left: 1px solid black;
+			    border-bottom: 1px solid black;
+			    border-right: 1px solid black;
+			    width: 20px;
+			    height: 20px;
+
+
+				background-color: #FFFFFF;
+
+				font-family:sans-serif;
+				font-size:12px;
+				text-align:right;
+			}
+
+
+			.leftSide {
+
+			    border-left: 1px solid black;
+			    border-bottom: 1px solid black;
+			    border-right: 1px solid black;
+			    width: 20px;
+			    height: 20px;
+
+
+				background-color: #FFFFFF;
+
+				font-family:sans-serif;
+				font-size:12px;
+				text-align:right;
+			}
+
+			.colourPickerTopLeft {
+			    border-left: 1px solid black;
+			    border-top: 1px solid black;
+			    border-bottom: 1px solid black;
+			    border-right: 1px solid black;
+			    width: 20px;
+			    height: 20px;
+			}
+
+			.colourPickerTopRight {
+			    border-top: 1px solid black;
+			    border-bottom: 1px solid black;
+			    border-right: 1px solid black;
+			    width: 20px;
+			    height: 20px;
+			}
+
+			
+			.topLeft {
+			    border-bottom: 1px solid black;
+			    border-right: 1px solid black;
+			    width: 20px;
+			    height: 20px;
+			}
+
+			.topRight {
+			    border-bottom: 1px solid black;
+			    border-right: 1px solid black;
+			    width: 20px;
+			    height: 20px;
+			}
+
+			.middleLeft {
+			    border-bottom: 1px solid black;
+			    border-right: 1px solid black;
+			    width: 20px;
+			    height: 20px;
+			}
+
+			.middleRight {
+			    border-bottom: 1px solid black;
+			    border-right: 1px solid black;
+			    width: 20px;
+			    height: 20px;
+			}
+			
+			.bottomLeft {
+			    border-left: 1px solid black;
+			    border-bottom: 1px solid black;
+			    border-right: 1px solid black;
+			    width: 20px;
+			    height: 20px;
+			}
+
+			.bottomRight {
+			    border-left: 1px solid white;
+			    width: 20px;
+			    height: 20px;
+			}
+
+			.transparentTopLeft {
+			    border-left: 1px solid black;
+			    border-top: 1px solid black;
+			    border-bottom: 1px solid black;
+			    
+			    width: 20px;
+			    height: 20px;
+
+    			background-image:
+			      linear-gradient(45deg, #ccc 25%, transparent 25%), 
+			      linear-gradient(135deg, #ccc 25%, transparent 25%),
+			      linear-gradient(45deg, transparent 75%, #ccc 75%),
+			      linear-gradient(135deg, transparent 75%, #ccc 75%);
+		    	background-size:21px 21px; /* Must be a square */
+			    background-position:0 0, 10.5px 0, 10.5px -10.5px, 0px 10.5px; /* Must be half of one side of the square */
+			}
+
+			.DefaultButtonOuter
+			{
+				border: 2px solid black ;
+				border-radius: 8px;
+				width: 96px;
+				height: 26px;
+				text-align: center;
+			
+				/*background-color: #99999a;*/
+				background: #99999a; /* For browsers that do not support gradients */
+				/*background: -webkit-linear-gradient(left top, red, yellow);*/ /* For Safari 5.1 to 6.0 */
+				/*background: -o-linear-gradient(bottom right, red, yellow);*/ /* For Opera 11.1 to 12.0 */
+				/*background: -moz-linear-gradient(bottom right, red, yellow); */ /* For Firefox 3.6 to 15 */
+				background: linear-gradient(to bottom right, #dcdbde, #737374); /* Standard syntax */
+			}
+
+			.ButtonInner
+			{
+				border: 1px solid black ;
+				border-radius: 5px;
+				background-color: #dcdbde;
+				width: 88px;
+				height: 18px;
+				text-align: center;
+				margin: 3px;
+			
+				line-height: 18px;
+				font-family: "Charcoal CY", "Virtue", Geneva, sans-serif;
+				font-size: 11px;
+				color: #000000;
+			}
+		
+			.ButtonInner:active
+			{
+				background:#666666;
+				color: #ffffff;
+			}
+
+
+		</style>
+		
+	</head>
+	
+	<body>
+		<h2>
+			<div style="font-family:FranklinGothic-Book,sans-serif">IconPush</div>
+		</h2>
+		
+		<p>
+			<div style="font-family:Giovanni-Book,serif">
+				Choose a colour from the colour picker, click a pixel, and click Search to find icons with that pixel value. 
+			</div>
+			<div style="font-family:Giovanni-Book,serif">
+				Read the <a href="docs.html" target=_blank>documentation</a> to find out more.
+			</div>
+			<div style="font-family:Giovanni-Book,serif">
+				I need a job. Please email <a href="mailto:peterburk@gmail.com">peterburk@gmail.com</a> if you'd like me to code for you!
+			</div>
+		</p>
+		
+		<table id="icon" cellspacing="0" cellpadding="0">
+			<tr>
+				<td>
+					<div class="headingLeft"></div>
+				</td>
+				<td>
+					<div class="headingRight">1</div>
+				</td>
+				<td>
+					<div class="headingRight">2</div>
+				</td>
+				<td>
+					<div class="headingRight">3</div>
+				</td>
+				<td>
+					<div class="headingRight">4</div>
+				</td>
+				<td>
+					<div class="headingRight">5</div>
+				</td>
+				<td>
+					<div class="headingRight">6</div>
+				</td>
+				<td>
+					<div class="headingRight">7</div>
+				</td>
+				<td>
+					<div class="headingRight">8</div>
+				</td>
+				<td>
+					<div class="headingRight">9</div>
+				</td>
+				<td>
+					<div class="headingRight">10</div>
+				</td>
+				<td>
+					<div class="headingRight">11</div>
+				</td>
+				<td>
+					<div class="headingRight">12</div>
+				</td>
+				<td>
+					<div class="headingRight">13</div>
+				</td>
+				<td>
+					<div class="headingRight">14</div>
+				</td>
+				<td>
+					<div class="headingRight">15</div>
+				</td>
+				<td>
+					<div class="headingRight">16</div>
+				</td>
+				<td>
+					<div class="headingRight">17</div>
+				</td>
+				<td>
+					<div class="headingRight">18</div>
+				</td>
+				<td>
+					<div class="headingRight">19</div>
+				</td>
+				<td>
+					<div class="headingRight">20</div>
+				</td>
+				<td>
+					<div class="headingRight">21</div>
+				</td>
+				<td>
+					<div class="headingRight">22</div>
+				</td>
+				<td>
+					<div class="headingRight">23</div>
+				</td>
+				<td>
+					<div class="headingRight">24</div>
+				</td>
+				<td>
+					<div class="headingRight">25</div>
+				</td>
+				<td>
+					<div class="headingRight">26</div>
+				</td>
+				<td>
+					<div class="headingRight">27</div>
+				</td>
+				<td>
+					<div class="headingRight">28</div>
+				</td>
+				<td>
+					<div class="headingRight">29</div>
+				</td>
+				<td>
+					<div class="headingRight">30</div>
+				</td>
+				<td>
+					<div class="headingRight">31</div>
+				</td>
+				<td>
+					<div class="headingRight">32</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="topLeftSide">1</div>
+				</td>
+				<td>
+					<div class="topLeft" id="1,1" style="background-color: transparent"  onclick="clicked('1,1');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,2" style="background-color: transparent"  onclick="clicked('1,2');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,3" style="background-color: transparent"  onclick="clicked('1,3');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,4" style="background-color: transparent"  onclick="clicked('1,4');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,5" style="background-color: transparent"  onclick="clicked('1,5');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,6" style="background-color: transparent"  onclick="clicked('1,6');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,7" style="background-color: transparent"  onclick="clicked('1,7');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,8" style="background-color: transparent"  onclick="clicked('1,8');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,9" style="background-color: transparent"  onclick="clicked('1,9');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,10" style="background-color: transparent"  onclick="clicked('1,10');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,11" style="background-color: transparent"  onclick="clicked('1,11');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,12" style="background-color: transparent"  onclick="clicked('1,12');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,13" style="background-color: transparent"  onclick="clicked('1,13');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,14" style="background-color: transparent"  onclick="clicked('1,14');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,15" style="background-color: transparent"  onclick="clicked('1,15');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,16" style="background-color: transparent"  onclick="clicked('1,16');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,17" style="background-color: transparent"  onclick="clicked('1,17');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,18" style="background-color: transparent"  onclick="clicked('1,18');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,19" style="background-color: transparent"  onclick="clicked('1,19');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,20" style="background-color: transparent"  onclick="clicked('1,20');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,21" style="background-color: transparent"  onclick="clicked('1,21');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,22" style="background-color: transparent"  onclick="clicked('1,22');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,23" style="background-color: transparent"  onclick="clicked('1,23');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,24" style="background-color: transparent"  onclick="clicked('1,24');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,25" style="background-color: transparent"  onclick="clicked('1,25');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,26" style="background-color: transparent"  onclick="clicked('1,26');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,27" style="background-color: transparent"  onclick="clicked('1,27');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,28" style="background-color: transparent"  onclick="clicked('1,28');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,29" style="background-color: transparent"  onclick="clicked('1,29');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,30" style="background-color: transparent"  onclick="clicked('1,30');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,31" style="background-color: transparent"  onclick="clicked('1,31');"></div>
+				</td>
+				<td>
+					<div class="topRight" id="1,32" style="background-color: transparent"  onclick="clicked('1,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">2</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="2,1" style="background-color: transparent"  onclick="clicked('2,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,2" style="background-color: transparent"  onclick="clicked('2,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,3" style="background-color: transparent"  onclick="clicked('2,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,4" style="background-color: transparent"  onclick="clicked('2,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,5" style="background-color: transparent"  onclick="clicked('2,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,6" style="background-color: transparent"  onclick="clicked('2,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,7" style="background-color: transparent"  onclick="clicked('2,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,8" style="background-color: transparent"  onclick="clicked('2,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,9" style="background-color: transparent"  onclick="clicked('2,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,10" style="background-color: transparent"  onclick="clicked('2,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,11" style="background-color: transparent"  onclick="clicked('2,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,12" style="background-color: transparent"  onclick="clicked('2,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,13" style="background-color: transparent"  onclick="clicked('2,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,14" style="background-color: transparent"  onclick="clicked('2,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,15" style="background-color: transparent"  onclick="clicked('2,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,16" style="background-color: transparent"  onclick="clicked('2,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,17" style="background-color: transparent"  onclick="clicked('2,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,18" style="background-color: transparent"  onclick="clicked('2,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,19" style="background-color: transparent"  onclick="clicked('2,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,20" style="background-color: transparent"  onclick="clicked('2,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,21" style="background-color: transparent"  onclick="clicked('2,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,22" style="background-color: transparent"  onclick="clicked('2,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,23" style="background-color: transparent"  onclick="clicked('2,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,24" style="background-color: transparent"  onclick="clicked('2,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,25" style="background-color: transparent"  onclick="clicked('2,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,26" style="background-color: transparent"  onclick="clicked('2,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,27" style="background-color: transparent"  onclick="clicked('2,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,28" style="background-color: transparent"  onclick="clicked('2,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,29" style="background-color: transparent"  onclick="clicked('2,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,30" style="background-color: transparent"  onclick="clicked('2,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,31" style="background-color: transparent"  onclick="clicked('2,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="2,32" style="background-color: transparent"  onclick="clicked('2,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">3</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="3,1" style="background-color: transparent"  onclick="clicked('3,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,2" style="background-color: transparent"  onclick="clicked('3,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,3" style="background-color: transparent"  onclick="clicked('3,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,4" style="background-color: transparent"  onclick="clicked('3,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,5" style="background-color: transparent"  onclick="clicked('3,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,6" style="background-color: transparent"  onclick="clicked('3,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,7" style="background-color: transparent"  onclick="clicked('3,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,8" style="background-color: transparent"  onclick="clicked('3,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,9" style="background-color: transparent"  onclick="clicked('3,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,10" style="background-color: transparent"  onclick="clicked('3,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,11" style="background-color: transparent"  onclick="clicked('3,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,12" style="background-color: transparent"  onclick="clicked('3,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,13" style="background-color: transparent"  onclick="clicked('3,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,14" style="background-color: transparent"  onclick="clicked('3,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,15" style="background-color: transparent"  onclick="clicked('3,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,16" style="background-color: transparent"  onclick="clicked('3,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,17" style="background-color: transparent"  onclick="clicked('3,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,18" style="background-color: transparent"  onclick="clicked('3,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,19" style="background-color: transparent"  onclick="clicked('3,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,20" style="background-color: transparent"  onclick="clicked('3,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,21" style="background-color: transparent"  onclick="clicked('3,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,22" style="background-color: transparent"  onclick="clicked('3,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,23" style="background-color: transparent"  onclick="clicked('3,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,24" style="background-color: transparent"  onclick="clicked('3,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,25" style="background-color: transparent"  onclick="clicked('3,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,26" style="background-color: transparent"  onclick="clicked('3,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,27" style="background-color: transparent"  onclick="clicked('3,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,28" style="background-color: transparent"  onclick="clicked('3,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,29" style="background-color: transparent"  onclick="clicked('3,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,30" style="background-color: transparent"  onclick="clicked('3,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,31" style="background-color: transparent"  onclick="clicked('3,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="3,32" style="background-color: transparent"  onclick="clicked('3,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">4</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="4,1" style="background-color: transparent"  onclick="clicked('4,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,2" style="background-color: transparent"  onclick="clicked('4,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,3" style="background-color: transparent"  onclick="clicked('4,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,4" style="background-color: transparent"  onclick="clicked('4,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,5" style="background-color: transparent"  onclick="clicked('4,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,6" style="background-color: transparent"  onclick="clicked('4,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,7" style="background-color: transparent"  onclick="clicked('4,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,8" style="background-color: transparent"  onclick="clicked('4,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,9" style="background-color: transparent"  onclick="clicked('4,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,10" style="background-color: transparent"  onclick="clicked('4,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,11" style="background-color: transparent"  onclick="clicked('4,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,12" style="background-color: transparent"  onclick="clicked('4,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,13" style="background-color: transparent"  onclick="clicked('4,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,14" style="background-color: transparent"  onclick="clicked('4,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,15" style="background-color: transparent"  onclick="clicked('4,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,16" style="background-color: transparent"  onclick="clicked('4,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,17" style="background-color: transparent"  onclick="clicked('4,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,18" style="background-color: transparent"  onclick="clicked('4,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,19" style="background-color: transparent"  onclick="clicked('4,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,20" style="background-color: transparent"  onclick="clicked('4,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,21" style="background-color: transparent"  onclick="clicked('4,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,22" style="background-color: transparent"  onclick="clicked('4,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,23" style="background-color: transparent"  onclick="clicked('4,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,24" style="background-color: transparent"  onclick="clicked('4,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,25" style="background-color: transparent"  onclick="clicked('4,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,26" style="background-color: transparent"  onclick="clicked('4,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,27" style="background-color: transparent"  onclick="clicked('4,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,28" style="background-color: transparent"  onclick="clicked('4,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,29" style="background-color: transparent"  onclick="clicked('4,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,30" style="background-color: transparent"  onclick="clicked('4,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,31" style="background-color: transparent"  onclick="clicked('4,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="4,32" style="background-color: transparent"  onclick="clicked('4,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">5</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="5,1" style="background-color: transparent"  onclick="clicked('5,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,2" style="background-color: transparent"  onclick="clicked('5,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,3" style="background-color: transparent"  onclick="clicked('5,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,4" style="background-color: transparent"  onclick="clicked('5,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,5" style="background-color: transparent"  onclick="clicked('5,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,6" style="background-color: transparent"  onclick="clicked('5,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,7" style="background-color: transparent"  onclick="clicked('5,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,8" style="background-color: transparent"  onclick="clicked('5,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,9" style="background-color: transparent"  onclick="clicked('5,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,10" style="background-color: transparent"  onclick="clicked('5,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,11" style="background-color: transparent"  onclick="clicked('5,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,12" style="background-color: transparent"  onclick="clicked('5,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,13" style="background-color: transparent"  onclick="clicked('5,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,14" style="background-color: transparent"  onclick="clicked('5,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,15" style="background-color: transparent"  onclick="clicked('5,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,16" style="background-color: transparent"  onclick="clicked('5,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,17" style="background-color: transparent"  onclick="clicked('5,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,18" style="background-color: transparent"  onclick="clicked('5,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,19" style="background-color: transparent"  onclick="clicked('5,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,20" style="background-color: transparent"  onclick="clicked('5,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,21" style="background-color: transparent"  onclick="clicked('5,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,22" style="background-color: transparent"  onclick="clicked('5,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,23" style="background-color: transparent"  onclick="clicked('5,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,24" style="background-color: transparent"  onclick="clicked('5,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,25" style="background-color: transparent"  onclick="clicked('5,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,26" style="background-color: transparent"  onclick="clicked('5,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,27" style="background-color: transparent"  onclick="clicked('5,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,28" style="background-color: transparent"  onclick="clicked('5,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,29" style="background-color: transparent"  onclick="clicked('5,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,30" style="background-color: transparent"  onclick="clicked('5,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,31" style="background-color: transparent"  onclick="clicked('5,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="5,32" style="background-color: transparent"  onclick="clicked('5,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">6</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="6,1" style="background-color: transparent"  onclick="clicked('6,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,2" style="background-color: transparent"  onclick="clicked('6,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,3" style="background-color: transparent"  onclick="clicked('6,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,4" style="background-color: transparent"  onclick="clicked('6,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,5" style="background-color: transparent"  onclick="clicked('6,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,6" style="background-color: transparent"  onclick="clicked('6,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,7" style="background-color: transparent"  onclick="clicked('6,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,8" style="background-color: transparent"  onclick="clicked('6,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,9" style="background-color: transparent"  onclick="clicked('6,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,10" style="background-color: transparent"  onclick="clicked('6,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,11" style="background-color: transparent"  onclick="clicked('6,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,12" style="background-color: transparent"  onclick="clicked('6,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,13" style="background-color: transparent"  onclick="clicked('6,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,14" style="background-color: transparent"  onclick="clicked('6,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,15" style="background-color: transparent"  onclick="clicked('6,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,16" style="background-color: transparent"  onclick="clicked('6,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,17" style="background-color: transparent"  onclick="clicked('6,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,18" style="background-color: transparent"  onclick="clicked('6,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,19" style="background-color: transparent"  onclick="clicked('6,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,20" style="background-color: transparent"  onclick="clicked('6,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,21" style="background-color: transparent"  onclick="clicked('6,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,22" style="background-color: transparent"  onclick="clicked('6,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,23" style="background-color: transparent"  onclick="clicked('6,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,24" style="background-color: transparent"  onclick="clicked('6,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,25" style="background-color: transparent"  onclick="clicked('6,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,26" style="background-color: transparent"  onclick="clicked('6,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,27" style="background-color: transparent"  onclick="clicked('6,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,28" style="background-color: transparent"  onclick="clicked('6,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,29" style="background-color: transparent"  onclick="clicked('6,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,30" style="background-color: transparent"  onclick="clicked('6,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,31" style="background-color: transparent"  onclick="clicked('6,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="6,32" style="background-color: transparent"  onclick="clicked('6,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">7</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="7,1" style="background-color: transparent"  onclick="clicked('7,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,2" style="background-color: transparent"  onclick="clicked('7,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,3" style="background-color: transparent"  onclick="clicked('7,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,4" style="background-color: transparent"  onclick="clicked('7,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,5" style="background-color: transparent"  onclick="clicked('7,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,6" style="background-color: transparent"  onclick="clicked('7,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,7" style="background-color: transparent"  onclick="clicked('7,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,8" style="background-color: transparent"  onclick="clicked('7,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,9" style="background-color: transparent"  onclick="clicked('7,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,10" style="background-color: transparent"  onclick="clicked('7,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,11" style="background-color: transparent"  onclick="clicked('7,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,12" style="background-color: transparent"  onclick="clicked('7,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,13" style="background-color: transparent"  onclick="clicked('7,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,14" style="background-color: transparent"  onclick="clicked('7,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,15" style="background-color: transparent"  onclick="clicked('7,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,16" style="background-color: transparent"  onclick="clicked('7,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,17" style="background-color: transparent"  onclick="clicked('7,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,18" style="background-color: transparent"  onclick="clicked('7,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,19" style="background-color: transparent"  onclick="clicked('7,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,20" style="background-color: transparent"  onclick="clicked('7,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,21" style="background-color: transparent"  onclick="clicked('7,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,22" style="background-color: transparent"  onclick="clicked('7,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,23" style="background-color: transparent"  onclick="clicked('7,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,24" style="background-color: transparent"  onclick="clicked('7,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,25" style="background-color: transparent"  onclick="clicked('7,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,26" style="background-color: transparent"  onclick="clicked('7,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,27" style="background-color: transparent"  onclick="clicked('7,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,28" style="background-color: transparent"  onclick="clicked('7,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,29" style="background-color: transparent"  onclick="clicked('7,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,30" style="background-color: transparent"  onclick="clicked('7,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,31" style="background-color: transparent"  onclick="clicked('7,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="7,32" style="background-color: transparent"  onclick="clicked('7,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">8</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="8,1" style="background-color: transparent"  onclick="clicked('8,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,2" style="background-color: transparent"  onclick="clicked('8,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,3" style="background-color: transparent"  onclick="clicked('8,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,4" style="background-color: transparent"  onclick="clicked('8,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,5" style="background-color: transparent"  onclick="clicked('8,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,6" style="background-color: transparent"  onclick="clicked('8,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,7" style="background-color: transparent"  onclick="clicked('8,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,8" style="background-color: transparent"  onclick="clicked('8,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,9" style="background-color: transparent"  onclick="clicked('8,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,10" style="background-color: transparent"  onclick="clicked('8,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,11" style="background-color: transparent"  onclick="clicked('8,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,12" style="background-color: transparent"  onclick="clicked('8,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,13" style="background-color: transparent"  onclick="clicked('8,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,14" style="background-color: transparent"  onclick="clicked('8,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,15" style="background-color: transparent"  onclick="clicked('8,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,16" style="background-color: transparent"  onclick="clicked('8,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,17" style="background-color: transparent"  onclick="clicked('8,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,18" style="background-color: transparent"  onclick="clicked('8,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,19" style="background-color: transparent"  onclick="clicked('8,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,20" style="background-color: transparent"  onclick="clicked('8,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,21" style="background-color: transparent"  onclick="clicked('8,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,22" style="background-color: transparent"  onclick="clicked('8,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,23" style="background-color: transparent"  onclick="clicked('8,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,24" style="background-color: transparent"  onclick="clicked('8,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,25" style="background-color: transparent"  onclick="clicked('8,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,26" style="background-color: transparent"  onclick="clicked('8,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,27" style="background-color: transparent"  onclick="clicked('8,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,28" style="background-color: transparent"  onclick="clicked('8,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,29" style="background-color: transparent"  onclick="clicked('8,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,30" style="background-color: transparent"  onclick="clicked('8,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,31" style="background-color: transparent"  onclick="clicked('8,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="8,32" style="background-color: transparent"  onclick="clicked('8,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">9</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="9,1" style="background-color: transparent"  onclick="clicked('9,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,2" style="background-color: transparent"  onclick="clicked('9,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,3" style="background-color: transparent"  onclick="clicked('9,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,4" style="background-color: transparent"  onclick="clicked('9,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,5" style="background-color: transparent"  onclick="clicked('9,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,6" style="background-color: transparent"  onclick="clicked('9,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,7" style="background-color: transparent"  onclick="clicked('9,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,8" style="background-color: transparent"  onclick="clicked('9,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,9" style="background-color: transparent"  onclick="clicked('9,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,10" style="background-color: transparent"  onclick="clicked('9,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,11" style="background-color: transparent"  onclick="clicked('9,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,12" style="background-color: transparent"  onclick="clicked('9,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,13" style="background-color: transparent"  onclick="clicked('9,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,14" style="background-color: transparent"  onclick="clicked('9,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,15" style="background-color: transparent"  onclick="clicked('9,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,16" style="background-color: transparent"  onclick="clicked('9,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,17" style="background-color: transparent"  onclick="clicked('9,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,18" style="background-color: transparent"  onclick="clicked('9,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,19" style="background-color: transparent"  onclick="clicked('9,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,20" style="background-color: transparent"  onclick="clicked('9,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,21" style="background-color: transparent"  onclick="clicked('9,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,22" style="background-color: transparent"  onclick="clicked('9,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,23" style="background-color: transparent"  onclick="clicked('9,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,24" style="background-color: transparent"  onclick="clicked('9,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,25" style="background-color: transparent"  onclick="clicked('9,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,26" style="background-color: transparent"  onclick="clicked('9,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,27" style="background-color: transparent"  onclick="clicked('9,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,28" style="background-color: transparent"  onclick="clicked('9,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,29" style="background-color: transparent"  onclick="clicked('9,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,30" style="background-color: transparent"  onclick="clicked('9,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,31" style="background-color: transparent"  onclick="clicked('9,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="9,32" style="background-color: transparent"  onclick="clicked('9,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">10</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="10,1" style="background-color: transparent"  onclick="clicked('10,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,2" style="background-color: transparent"  onclick="clicked('10,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,3" style="background-color: transparent"  onclick="clicked('10,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,4" style="background-color: transparent"  onclick="clicked('10,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,5" style="background-color: transparent"  onclick="clicked('10,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,6" style="background-color: transparent"  onclick="clicked('10,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,7" style="background-color: transparent"  onclick="clicked('10,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,8" style="background-color: transparent"  onclick="clicked('10,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,9" style="background-color: transparent"  onclick="clicked('10,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,10" style="background-color: transparent"  onclick="clicked('10,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,11" style="background-color: transparent"  onclick="clicked('10,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,12" style="background-color: transparent"  onclick="clicked('10,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,13" style="background-color: transparent"  onclick="clicked('10,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,14" style="background-color: transparent"  onclick="clicked('10,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,15" style="background-color: transparent"  onclick="clicked('10,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,16" style="background-color: transparent"  onclick="clicked('10,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,17" style="background-color: transparent"  onclick="clicked('10,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,18" style="background-color: transparent"  onclick="clicked('10,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,19" style="background-color: transparent"  onclick="clicked('10,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,20" style="background-color: transparent"  onclick="clicked('10,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,21" style="background-color: transparent"  onclick="clicked('10,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,22" style="background-color: transparent"  onclick="clicked('10,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,23" style="background-color: transparent"  onclick="clicked('10,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,24" style="background-color: transparent"  onclick="clicked('10,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,25" style="background-color: transparent"  onclick="clicked('10,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,26" style="background-color: transparent"  onclick="clicked('10,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,27" style="background-color: transparent"  onclick="clicked('10,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,28" style="background-color: transparent"  onclick="clicked('10,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,29" style="background-color: transparent"  onclick="clicked('10,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,30" style="background-color: transparent"  onclick="clicked('10,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,31" style="background-color: transparent"  onclick="clicked('10,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="10,32" style="background-color: transparent"  onclick="clicked('10,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">11</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="11,1" style="background-color: transparent"  onclick="clicked('11,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,2" style="background-color: transparent"  onclick="clicked('11,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,3" style="background-color: transparent"  onclick="clicked('11,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,4" style="background-color: transparent"  onclick="clicked('11,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,5" style="background-color: transparent"  onclick="clicked('11,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,6" style="background-color: transparent"  onclick="clicked('11,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,7" style="background-color: transparent"  onclick="clicked('11,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,8" style="background-color: transparent"  onclick="clicked('11,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,9" style="background-color: transparent"  onclick="clicked('11,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,10" style="background-color: transparent"  onclick="clicked('11,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,11" style="background-color: transparent"  onclick="clicked('11,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,12" style="background-color: transparent"  onclick="clicked('11,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,13" style="background-color: transparent"  onclick="clicked('11,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,14" style="background-color: transparent"  onclick="clicked('11,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,15" style="background-color: transparent"  onclick="clicked('11,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,16" style="background-color: transparent"  onclick="clicked('11,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,17" style="background-color: transparent"  onclick="clicked('11,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,18" style="background-color: transparent"  onclick="clicked('11,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,19" style="background-color: transparent"  onclick="clicked('11,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,20" style="background-color: transparent"  onclick="clicked('11,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,21" style="background-color: transparent"  onclick="clicked('11,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,22" style="background-color: transparent"  onclick="clicked('11,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,23" style="background-color: transparent"  onclick="clicked('11,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,24" style="background-color: transparent"  onclick="clicked('11,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,25" style="background-color: transparent"  onclick="clicked('11,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,26" style="background-color: transparent"  onclick="clicked('11,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,27" style="background-color: transparent"  onclick="clicked('11,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,28" style="background-color: transparent"  onclick="clicked('11,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,29" style="background-color: transparent"  onclick="clicked('11,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,30" style="background-color: transparent"  onclick="clicked('11,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,31" style="background-color: transparent"  onclick="clicked('11,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="11,32" style="background-color: transparent"  onclick="clicked('11,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">12</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="12,1" style="background-color: transparent"  onclick="clicked('12,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,2" style="background-color: transparent"  onclick="clicked('12,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,3" style="background-color: transparent"  onclick="clicked('12,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,4" style="background-color: transparent"  onclick="clicked('12,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,5" style="background-color: transparent"  onclick="clicked('12,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,6" style="background-color: transparent"  onclick="clicked('12,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,7" style="background-color: transparent"  onclick="clicked('12,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,8" style="background-color: transparent"  onclick="clicked('12,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,9" style="background-color: transparent"  onclick="clicked('12,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,10" style="background-color: transparent"  onclick="clicked('12,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,11" style="background-color: transparent"  onclick="clicked('12,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,12" style="background-color: transparent"  onclick="clicked('12,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,13" style="background-color: transparent"  onclick="clicked('12,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,14" style="background-color: transparent"  onclick="clicked('12,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,15" style="background-color: transparent"  onclick="clicked('12,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,16" style="background-color: transparent"  onclick="clicked('12,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,17" style="background-color: transparent"  onclick="clicked('12,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,18" style="background-color: transparent"  onclick="clicked('12,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,19" style="background-color: transparent"  onclick="clicked('12,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,20" style="background-color: transparent"  onclick="clicked('12,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,21" style="background-color: transparent"  onclick="clicked('12,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,22" style="background-color: transparent"  onclick="clicked('12,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,23" style="background-color: transparent"  onclick="clicked('12,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,24" style="background-color: transparent"  onclick="clicked('12,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,25" style="background-color: transparent"  onclick="clicked('12,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,26" style="background-color: transparent"  onclick="clicked('12,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,27" style="background-color: transparent"  onclick="clicked('12,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,28" style="background-color: transparent"  onclick="clicked('12,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,29" style="background-color: transparent"  onclick="clicked('12,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,30" style="background-color: transparent"  onclick="clicked('12,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,31" style="background-color: transparent"  onclick="clicked('12,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="12,32" style="background-color: transparent"  onclick="clicked('12,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">13</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="13,1" style="background-color: transparent"  onclick="clicked('13,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,2" style="background-color: transparent"  onclick="clicked('13,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,3" style="background-color: transparent"  onclick="clicked('13,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,4" style="background-color: transparent"  onclick="clicked('13,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,5" style="background-color: transparent"  onclick="clicked('13,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,6" style="background-color: transparent"  onclick="clicked('13,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,7" style="background-color: transparent"  onclick="clicked('13,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,8" style="background-color: transparent"  onclick="clicked('13,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,9" style="background-color: transparent"  onclick="clicked('13,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,10" style="background-color: transparent"  onclick="clicked('13,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,11" style="background-color: transparent"  onclick="clicked('13,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,12" style="background-color: transparent"  onclick="clicked('13,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,13" style="background-color: transparent"  onclick="clicked('13,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,14" style="background-color: transparent"  onclick="clicked('13,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,15" style="background-color: transparent"  onclick="clicked('13,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,16" style="background-color: transparent"  onclick="clicked('13,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,17" style="background-color: transparent"  onclick="clicked('13,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,18" style="background-color: transparent"  onclick="clicked('13,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,19" style="background-color: transparent"  onclick="clicked('13,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,20" style="background-color: transparent"  onclick="clicked('13,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,21" style="background-color: transparent"  onclick="clicked('13,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,22" style="background-color: transparent"  onclick="clicked('13,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,23" style="background-color: transparent"  onclick="clicked('13,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,24" style="background-color: transparent"  onclick="clicked('13,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,25" style="background-color: transparent"  onclick="clicked('13,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,26" style="background-color: transparent"  onclick="clicked('13,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,27" style="background-color: transparent"  onclick="clicked('13,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,28" style="background-color: transparent"  onclick="clicked('13,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,29" style="background-color: transparent"  onclick="clicked('13,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,30" style="background-color: transparent"  onclick="clicked('13,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,31" style="background-color: transparent"  onclick="clicked('13,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="13,32" style="background-color: transparent"  onclick="clicked('13,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">14</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="14,1" style="background-color: transparent"  onclick="clicked('14,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,2" style="background-color: transparent"  onclick="clicked('14,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,3" style="background-color: transparent"  onclick="clicked('14,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,4" style="background-color: transparent"  onclick="clicked('14,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,5" style="background-color: transparent"  onclick="clicked('14,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,6" style="background-color: transparent"  onclick="clicked('14,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,7" style="background-color: transparent"  onclick="clicked('14,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,8" style="background-color: transparent"  onclick="clicked('14,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,9" style="background-color: transparent"  onclick="clicked('14,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,10" style="background-color: transparent"  onclick="clicked('14,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,11" style="background-color: transparent"  onclick="clicked('14,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,12" style="background-color: transparent"  onclick="clicked('14,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,13" style="background-color: transparent"  onclick="clicked('14,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,14" style="background-color: transparent"  onclick="clicked('14,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,15" style="background-color: transparent"  onclick="clicked('14,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,16" style="background-color: transparent"  onclick="clicked('14,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,17" style="background-color: transparent"  onclick="clicked('14,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,18" style="background-color: transparent"  onclick="clicked('14,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,19" style="background-color: transparent"  onclick="clicked('14,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,20" style="background-color: transparent"  onclick="clicked('14,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,21" style="background-color: transparent"  onclick="clicked('14,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,22" style="background-color: transparent"  onclick="clicked('14,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,23" style="background-color: transparent"  onclick="clicked('14,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,24" style="background-color: transparent"  onclick="clicked('14,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,25" style="background-color: transparent"  onclick="clicked('14,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,26" style="background-color: transparent"  onclick="clicked('14,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,27" style="background-color: transparent"  onclick="clicked('14,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,28" style="background-color: transparent"  onclick="clicked('14,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,29" style="background-color: transparent"  onclick="clicked('14,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,30" style="background-color: transparent"  onclick="clicked('14,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,31" style="background-color: transparent"  onclick="clicked('14,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="14,32" style="background-color: transparent"  onclick="clicked('14,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">15</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="15,1" style="background-color: transparent"  onclick="clicked('15,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,2" style="background-color: transparent"  onclick="clicked('15,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,3" style="background-color: transparent"  onclick="clicked('15,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,4" style="background-color: transparent"  onclick="clicked('15,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,5" style="background-color: transparent"  onclick="clicked('15,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,6" style="background-color: transparent"  onclick="clicked('15,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,7" style="background-color: transparent"  onclick="clicked('15,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,8" style="background-color: transparent"  onclick="clicked('15,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,9" style="background-color: transparent"  onclick="clicked('15,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,10" style="background-color: transparent"  onclick="clicked('15,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,11" style="background-color: transparent"  onclick="clicked('15,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,12" style="background-color: transparent"  onclick="clicked('15,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,13" style="background-color: transparent"  onclick="clicked('15,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,14" style="background-color: transparent"  onclick="clicked('15,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,15" style="background-color: transparent"  onclick="clicked('15,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,16" style="background-color: transparent"  onclick="clicked('15,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,17" style="background-color: transparent"  onclick="clicked('15,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,18" style="background-color: transparent"  onclick="clicked('15,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,19" style="background-color: transparent"  onclick="clicked('15,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,20" style="background-color: transparent"  onclick="clicked('15,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,21" style="background-color: transparent"  onclick="clicked('15,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,22" style="background-color: transparent"  onclick="clicked('15,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,23" style="background-color: transparent"  onclick="clicked('15,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,24" style="background-color: transparent"  onclick="clicked('15,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,25" style="background-color: transparent"  onclick="clicked('15,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,26" style="background-color: transparent"  onclick="clicked('15,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,27" style="background-color: transparent"  onclick="clicked('15,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,28" style="background-color: transparent"  onclick="clicked('15,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,29" style="background-color: transparent"  onclick="clicked('15,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,30" style="background-color: transparent"  onclick="clicked('15,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,31" style="background-color: transparent"  onclick="clicked('15,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="15,32" style="background-color: transparent"  onclick="clicked('15,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">16</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="16,1" style="background-color: transparent"  onclick="clicked('16,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,2" style="background-color: transparent"  onclick="clicked('16,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,3" style="background-color: transparent"  onclick="clicked('16,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,4" style="background-color: transparent"  onclick="clicked('16,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,5" style="background-color: transparent"  onclick="clicked('16,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,6" style="background-color: transparent"  onclick="clicked('16,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,7" style="background-color: transparent"  onclick="clicked('16,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,8" style="background-color: transparent"  onclick="clicked('16,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,9" style="background-color: transparent"  onclick="clicked('16,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,10" style="background-color: transparent"  onclick="clicked('16,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,11" style="background-color: transparent"  onclick="clicked('16,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,12" style="background-color: transparent"  onclick="clicked('16,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,13" style="background-color: transparent"  onclick="clicked('16,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,14" style="background-color: transparent"  onclick="clicked('16,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,15" style="background-color: transparent"  onclick="clicked('16,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,16" style="background-color: transparent"  onclick="clicked('16,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,17" style="background-color: transparent"  onclick="clicked('16,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,18" style="background-color: transparent"  onclick="clicked('16,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,19" style="background-color: transparent"  onclick="clicked('16,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,20" style="background-color: transparent"  onclick="clicked('16,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,21" style="background-color: transparent"  onclick="clicked('16,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,22" style="background-color: transparent"  onclick="clicked('16,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,23" style="background-color: transparent"  onclick="clicked('16,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,24" style="background-color: transparent"  onclick="clicked('16,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,25" style="background-color: transparent"  onclick="clicked('16,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,26" style="background-color: transparent"  onclick="clicked('16,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,27" style="background-color: transparent"  onclick="clicked('16,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,28" style="background-color: transparent"  onclick="clicked('16,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,29" style="background-color: transparent"  onclick="clicked('16,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,30" style="background-color: transparent"  onclick="clicked('16,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,31" style="background-color: transparent"  onclick="clicked('16,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="16,32" style="background-color: transparent"  onclick="clicked('16,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">17</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="17,1" style="background-color: transparent"  onclick="clicked('17,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,2" style="background-color: transparent"  onclick="clicked('17,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,3" style="background-color: transparent"  onclick="clicked('17,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,4" style="background-color: transparent"  onclick="clicked('17,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,5" style="background-color: transparent"  onclick="clicked('17,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,6" style="background-color: transparent"  onclick="clicked('17,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,7" style="background-color: transparent"  onclick="clicked('17,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,8" style="background-color: transparent"  onclick="clicked('17,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,9" style="background-color: transparent"  onclick="clicked('17,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,10" style="background-color: transparent"  onclick="clicked('17,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,11" style="background-color: transparent"  onclick="clicked('17,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,12" style="background-color: transparent"  onclick="clicked('17,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,13" style="background-color: transparent"  onclick="clicked('17,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,14" style="background-color: transparent"  onclick="clicked('17,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,15" style="background-color: transparent"  onclick="clicked('17,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,16" style="background-color: transparent"  onclick="clicked('17,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,17" style="background-color: transparent"  onclick="clicked('17,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,18" style="background-color: transparent"  onclick="clicked('17,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,19" style="background-color: transparent"  onclick="clicked('17,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,20" style="background-color: transparent"  onclick="clicked('17,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,21" style="background-color: transparent"  onclick="clicked('17,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,22" style="background-color: transparent"  onclick="clicked('17,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,23" style="background-color: transparent"  onclick="clicked('17,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,24" style="background-color: transparent"  onclick="clicked('17,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,25" style="background-color: transparent"  onclick="clicked('17,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,26" style="background-color: transparent"  onclick="clicked('17,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,27" style="background-color: transparent"  onclick="clicked('17,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,28" style="background-color: transparent"  onclick="clicked('17,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,29" style="background-color: transparent"  onclick="clicked('17,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,30" style="background-color: transparent"  onclick="clicked('17,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,31" style="background-color: transparent"  onclick="clicked('17,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="17,32" style="background-color: transparent"  onclick="clicked('17,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">18</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="18,1" style="background-color: transparent"  onclick="clicked('18,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,2" style="background-color: transparent"  onclick="clicked('18,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,3" style="background-color: transparent"  onclick="clicked('18,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,4" style="background-color: transparent"  onclick="clicked('18,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,5" style="background-color: transparent"  onclick="clicked('18,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,6" style="background-color: transparent"  onclick="clicked('18,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,7" style="background-color: transparent"  onclick="clicked('18,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,8" style="background-color: transparent"  onclick="clicked('18,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,9" style="background-color: transparent"  onclick="clicked('18,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,10" style="background-color: transparent"  onclick="clicked('18,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,11" style="background-color: transparent"  onclick="clicked('18,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,12" style="background-color: transparent"  onclick="clicked('18,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,13" style="background-color: transparent"  onclick="clicked('18,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,14" style="background-color: transparent"  onclick="clicked('18,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,15" style="background-color: transparent"  onclick="clicked('18,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,16" style="background-color: transparent"  onclick="clicked('18,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,17" style="background-color: transparent"  onclick="clicked('18,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,18" style="background-color: transparent"  onclick="clicked('18,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,19" style="background-color: transparent"  onclick="clicked('18,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,20" style="background-color: transparent"  onclick="clicked('18,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,21" style="background-color: transparent"  onclick="clicked('18,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,22" style="background-color: transparent"  onclick="clicked('18,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,23" style="background-color: transparent"  onclick="clicked('18,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,24" style="background-color: transparent"  onclick="clicked('18,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,25" style="background-color: transparent"  onclick="clicked('18,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,26" style="background-color: transparent"  onclick="clicked('18,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,27" style="background-color: transparent"  onclick="clicked('18,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,28" style="background-color: transparent"  onclick="clicked('18,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,29" style="background-color: transparent"  onclick="clicked('18,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,30" style="background-color: transparent"  onclick="clicked('18,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,31" style="background-color: transparent"  onclick="clicked('18,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="18,32" style="background-color: transparent"  onclick="clicked('18,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">19</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="19,1" style="background-color: transparent"  onclick="clicked('19,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,2" style="background-color: transparent"  onclick="clicked('19,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,3" style="background-color: transparent"  onclick="clicked('19,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,4" style="background-color: transparent"  onclick="clicked('19,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,5" style="background-color: transparent"  onclick="clicked('19,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,6" style="background-color: transparent"  onclick="clicked('19,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,7" style="background-color: transparent"  onclick="clicked('19,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,8" style="background-color: transparent"  onclick="clicked('19,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,9" style="background-color: transparent"  onclick="clicked('19,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,10" style="background-color: transparent"  onclick="clicked('19,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,11" style="background-color: transparent"  onclick="clicked('19,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,12" style="background-color: transparent"  onclick="clicked('19,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,13" style="background-color: transparent"  onclick="clicked('19,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,14" style="background-color: transparent"  onclick="clicked('19,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,15" style="background-color: transparent"  onclick="clicked('19,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,16" style="background-color: transparent"  onclick="clicked('19,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,17" style="background-color: transparent"  onclick="clicked('19,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,18" style="background-color: transparent"  onclick="clicked('19,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,19" style="background-color: transparent"  onclick="clicked('19,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,20" style="background-color: transparent"  onclick="clicked('19,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,21" style="background-color: transparent"  onclick="clicked('19,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,22" style="background-color: transparent"  onclick="clicked('19,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,23" style="background-color: transparent"  onclick="clicked('19,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,24" style="background-color: transparent"  onclick="clicked('19,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,25" style="background-color: transparent"  onclick="clicked('19,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,26" style="background-color: transparent"  onclick="clicked('19,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,27" style="background-color: transparent"  onclick="clicked('19,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,28" style="background-color: transparent"  onclick="clicked('19,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,29" style="background-color: transparent"  onclick="clicked('19,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,30" style="background-color: transparent"  onclick="clicked('19,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,31" style="background-color: transparent"  onclick="clicked('19,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="19,32" style="background-color: transparent"  onclick="clicked('19,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">20</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="20,1" style="background-color: transparent"  onclick="clicked('20,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,2" style="background-color: transparent"  onclick="clicked('20,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,3" style="background-color: transparent"  onclick="clicked('20,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,4" style="background-color: transparent"  onclick="clicked('20,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,5" style="background-color: transparent"  onclick="clicked('20,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,6" style="background-color: transparent"  onclick="clicked('20,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,7" style="background-color: transparent"  onclick="clicked('20,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,8" style="background-color: transparent"  onclick="clicked('20,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,9" style="background-color: transparent"  onclick="clicked('20,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,10" style="background-color: transparent"  onclick="clicked('20,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,11" style="background-color: transparent"  onclick="clicked('20,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,12" style="background-color: transparent"  onclick="clicked('20,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,13" style="background-color: transparent"  onclick="clicked('20,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,14" style="background-color: transparent"  onclick="clicked('20,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,15" style="background-color: transparent"  onclick="clicked('20,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,16" style="background-color: transparent"  onclick="clicked('20,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,17" style="background-color: transparent"  onclick="clicked('20,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,18" style="background-color: transparent"  onclick="clicked('20,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,19" style="background-color: transparent"  onclick="clicked('20,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,20" style="background-color: transparent"  onclick="clicked('20,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,21" style="background-color: transparent"  onclick="clicked('20,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,22" style="background-color: transparent"  onclick="clicked('20,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,23" style="background-color: transparent"  onclick="clicked('20,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,24" style="background-color: transparent"  onclick="clicked('20,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,25" style="background-color: transparent"  onclick="clicked('20,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,26" style="background-color: transparent"  onclick="clicked('20,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,27" style="background-color: transparent"  onclick="clicked('20,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,28" style="background-color: transparent"  onclick="clicked('20,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,29" style="background-color: transparent"  onclick="clicked('20,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,30" style="background-color: transparent"  onclick="clicked('20,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,31" style="background-color: transparent"  onclick="clicked('20,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="20,32" style="background-color: transparent"  onclick="clicked('20,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">21</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="21,1" style="background-color: transparent"  onclick="clicked('21,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,2" style="background-color: transparent"  onclick="clicked('21,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,3" style="background-color: transparent"  onclick="clicked('21,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,4" style="background-color: transparent"  onclick="clicked('21,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,5" style="background-color: transparent"  onclick="clicked('21,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,6" style="background-color: transparent"  onclick="clicked('21,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,7" style="background-color: transparent"  onclick="clicked('21,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,8" style="background-color: transparent"  onclick="clicked('21,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,9" style="background-color: transparent"  onclick="clicked('21,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,10" style="background-color: transparent"  onclick="clicked('21,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,11" style="background-color: transparent"  onclick="clicked('21,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,12" style="background-color: transparent"  onclick="clicked('21,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,13" style="background-color: transparent"  onclick="clicked('21,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,14" style="background-color: transparent"  onclick="clicked('21,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,15" style="background-color: transparent"  onclick="clicked('21,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,16" style="background-color: transparent"  onclick="clicked('21,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,17" style="background-color: transparent"  onclick="clicked('21,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,18" style="background-color: transparent"  onclick="clicked('21,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,19" style="background-color: transparent"  onclick="clicked('21,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,20" style="background-color: transparent"  onclick="clicked('21,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,21" style="background-color: transparent"  onclick="clicked('21,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,22" style="background-color: transparent"  onclick="clicked('21,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,23" style="background-color: transparent"  onclick="clicked('21,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,24" style="background-color: transparent"  onclick="clicked('21,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,25" style="background-color: transparent"  onclick="clicked('21,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,26" style="background-color: transparent"  onclick="clicked('21,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,27" style="background-color: transparent"  onclick="clicked('21,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,28" style="background-color: transparent"  onclick="clicked('21,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,29" style="background-color: transparent"  onclick="clicked('21,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,30" style="background-color: transparent"  onclick="clicked('21,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,31" style="background-color: transparent"  onclick="clicked('21,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="21,32" style="background-color: transparent"  onclick="clicked('21,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">22</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="22,1" style="background-color: transparent"  onclick="clicked('22,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,2" style="background-color: transparent"  onclick="clicked('22,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,3" style="background-color: transparent"  onclick="clicked('22,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,4" style="background-color: transparent"  onclick="clicked('22,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,5" style="background-color: transparent"  onclick="clicked('22,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,6" style="background-color: transparent"  onclick="clicked('22,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,7" style="background-color: transparent"  onclick="clicked('22,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,8" style="background-color: transparent"  onclick="clicked('22,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,9" style="background-color: transparent"  onclick="clicked('22,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,10" style="background-color: transparent"  onclick="clicked('22,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,11" style="background-color: transparent"  onclick="clicked('22,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,12" style="background-color: transparent"  onclick="clicked('22,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,13" style="background-color: transparent"  onclick="clicked('22,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,14" style="background-color: transparent"  onclick="clicked('22,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,15" style="background-color: transparent"  onclick="clicked('22,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,16" style="background-color: transparent"  onclick="clicked('22,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,17" style="background-color: transparent"  onclick="clicked('22,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,18" style="background-color: transparent"  onclick="clicked('22,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,19" style="background-color: transparent"  onclick="clicked('22,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,20" style="background-color: transparent"  onclick="clicked('22,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,21" style="background-color: transparent"  onclick="clicked('22,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,22" style="background-color: transparent"  onclick="clicked('22,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,23" style="background-color: transparent"  onclick="clicked('22,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,24" style="background-color: transparent"  onclick="clicked('22,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,25" style="background-color: transparent"  onclick="clicked('22,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,26" style="background-color: transparent"  onclick="clicked('22,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,27" style="background-color: transparent"  onclick="clicked('22,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,28" style="background-color: transparent"  onclick="clicked('22,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,29" style="background-color: transparent"  onclick="clicked('22,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,30" style="background-color: transparent"  onclick="clicked('22,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,31" style="background-color: transparent"  onclick="clicked('22,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="22,32" style="background-color: transparent"  onclick="clicked('22,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">23</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="23,1" style="background-color: transparent"  onclick="clicked('23,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,2" style="background-color: transparent"  onclick="clicked('23,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,3" style="background-color: transparent"  onclick="clicked('23,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,4" style="background-color: transparent"  onclick="clicked('23,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,5" style="background-color: transparent"  onclick="clicked('23,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,6" style="background-color: transparent"  onclick="clicked('23,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,7" style="background-color: transparent"  onclick="clicked('23,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,8" style="background-color: transparent"  onclick="clicked('23,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,9" style="background-color: transparent"  onclick="clicked('23,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,10" style="background-color: transparent"  onclick="clicked('23,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,11" style="background-color: transparent"  onclick="clicked('23,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,12" style="background-color: transparent"  onclick="clicked('23,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,13" style="background-color: transparent"  onclick="clicked('23,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,14" style="background-color: transparent"  onclick="clicked('23,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,15" style="background-color: transparent"  onclick="clicked('23,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,16" style="background-color: transparent"  onclick="clicked('23,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,17" style="background-color: transparent"  onclick="clicked('23,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,18" style="background-color: transparent"  onclick="clicked('23,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,19" style="background-color: transparent"  onclick="clicked('23,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,20" style="background-color: transparent"  onclick="clicked('23,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,21" style="background-color: transparent"  onclick="clicked('23,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,22" style="background-color: transparent"  onclick="clicked('23,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,23" style="background-color: transparent"  onclick="clicked('23,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,24" style="background-color: transparent"  onclick="clicked('23,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,25" style="background-color: transparent"  onclick="clicked('23,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,26" style="background-color: transparent"  onclick="clicked('23,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,27" style="background-color: transparent"  onclick="clicked('23,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,28" style="background-color: transparent"  onclick="clicked('23,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,29" style="background-color: transparent"  onclick="clicked('23,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,30" style="background-color: transparent"  onclick="clicked('23,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,31" style="background-color: transparent"  onclick="clicked('23,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="23,32" style="background-color: transparent"  onclick="clicked('23,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">24</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="24,1" style="background-color: transparent"  onclick="clicked('24,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,2" style="background-color: transparent"  onclick="clicked('24,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,3" style="background-color: transparent"  onclick="clicked('24,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,4" style="background-color: transparent"  onclick="clicked('24,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,5" style="background-color: transparent"  onclick="clicked('24,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,6" style="background-color: transparent"  onclick="clicked('24,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,7" style="background-color: transparent"  onclick="clicked('24,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,8" style="background-color: transparent"  onclick="clicked('24,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,9" style="background-color: transparent"  onclick="clicked('24,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,10" style="background-color: transparent"  onclick="clicked('24,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,11" style="background-color: transparent"  onclick="clicked('24,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,12" style="background-color: transparent"  onclick="clicked('24,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,13" style="background-color: transparent"  onclick="clicked('24,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,14" style="background-color: transparent"  onclick="clicked('24,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,15" style="background-color: transparent"  onclick="clicked('24,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,16" style="background-color: transparent"  onclick="clicked('24,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,17" style="background-color: transparent"  onclick="clicked('24,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,18" style="background-color: transparent"  onclick="clicked('24,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,19" style="background-color: transparent"  onclick="clicked('24,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,20" style="background-color: transparent"  onclick="clicked('24,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,21" style="background-color: transparent"  onclick="clicked('24,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,22" style="background-color: transparent"  onclick="clicked('24,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,23" style="background-color: transparent"  onclick="clicked('24,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,24" style="background-color: transparent"  onclick="clicked('24,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,25" style="background-color: transparent"  onclick="clicked('24,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,26" style="background-color: transparent"  onclick="clicked('24,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,27" style="background-color: transparent"  onclick="clicked('24,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,28" style="background-color: transparent"  onclick="clicked('24,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,29" style="background-color: transparent"  onclick="clicked('24,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,30" style="background-color: transparent"  onclick="clicked('24,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,31" style="background-color: transparent"  onclick="clicked('24,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="24,32" style="background-color: transparent"  onclick="clicked('24,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">25</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="25,1" style="background-color: transparent"  onclick="clicked('25,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,2" style="background-color: transparent"  onclick="clicked('25,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,3" style="background-color: transparent"  onclick="clicked('25,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,4" style="background-color: transparent"  onclick="clicked('25,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,5" style="background-color: transparent"  onclick="clicked('25,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,6" style="background-color: transparent"  onclick="clicked('25,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,7" style="background-color: transparent"  onclick="clicked('25,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,8" style="background-color: transparent"  onclick="clicked('25,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,9" style="background-color: transparent"  onclick="clicked('25,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,10" style="background-color: transparent"  onclick="clicked('25,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,11" style="background-color: transparent"  onclick="clicked('25,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,12" style="background-color: transparent"  onclick="clicked('25,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,13" style="background-color: transparent"  onclick="clicked('25,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,14" style="background-color: transparent"  onclick="clicked('25,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,15" style="background-color: transparent"  onclick="clicked('25,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,16" style="background-color: transparent"  onclick="clicked('25,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,17" style="background-color: transparent"  onclick="clicked('25,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,18" style="background-color: transparent"  onclick="clicked('25,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,19" style="background-color: transparent"  onclick="clicked('25,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,20" style="background-color: transparent"  onclick="clicked('25,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,21" style="background-color: transparent"  onclick="clicked('25,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,22" style="background-color: transparent"  onclick="clicked('25,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,23" style="background-color: transparent"  onclick="clicked('25,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,24" style="background-color: transparent"  onclick="clicked('25,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,25" style="background-color: transparent"  onclick="clicked('25,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,26" style="background-color: transparent"  onclick="clicked('25,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,27" style="background-color: transparent"  onclick="clicked('25,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,28" style="background-color: transparent"  onclick="clicked('25,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,29" style="background-color: transparent"  onclick="clicked('25,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,30" style="background-color: transparent"  onclick="clicked('25,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,31" style="background-color: transparent"  onclick="clicked('25,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="25,32" style="background-color: transparent"  onclick="clicked('25,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">26</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="26,1" style="background-color: transparent"  onclick="clicked('26,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,2" style="background-color: transparent"  onclick="clicked('26,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,3" style="background-color: transparent"  onclick="clicked('26,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,4" style="background-color: transparent"  onclick="clicked('26,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,5" style="background-color: transparent"  onclick="clicked('26,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,6" style="background-color: transparent"  onclick="clicked('26,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,7" style="background-color: transparent"  onclick="clicked('26,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,8" style="background-color: transparent"  onclick="clicked('26,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,9" style="background-color: transparent"  onclick="clicked('26,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,10" style="background-color: transparent"  onclick="clicked('26,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,11" style="background-color: transparent"  onclick="clicked('26,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,12" style="background-color: transparent"  onclick="clicked('26,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,13" style="background-color: transparent"  onclick="clicked('26,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,14" style="background-color: transparent"  onclick="clicked('26,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,15" style="background-color: transparent"  onclick="clicked('26,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,16" style="background-color: transparent"  onclick="clicked('26,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,17" style="background-color: transparent"  onclick="clicked('26,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,18" style="background-color: transparent"  onclick="clicked('26,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,19" style="background-color: transparent"  onclick="clicked('26,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,20" style="background-color: transparent"  onclick="clicked('26,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,21" style="background-color: transparent"  onclick="clicked('26,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,22" style="background-color: transparent"  onclick="clicked('26,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,23" style="background-color: transparent"  onclick="clicked('26,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,24" style="background-color: transparent"  onclick="clicked('26,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,25" style="background-color: transparent"  onclick="clicked('26,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,26" style="background-color: transparent"  onclick="clicked('26,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,27" style="background-color: transparent"  onclick="clicked('26,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,28" style="background-color: transparent"  onclick="clicked('26,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,29" style="background-color: transparent"  onclick="clicked('26,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,30" style="background-color: transparent"  onclick="clicked('26,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,31" style="background-color: transparent"  onclick="clicked('26,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="26,32" style="background-color: transparent"  onclick="clicked('26,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">27</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="27,1" style="background-color: transparent"  onclick="clicked('27,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,2" style="background-color: transparent"  onclick="clicked('27,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,3" style="background-color: transparent"  onclick="clicked('27,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,4" style="background-color: transparent"  onclick="clicked('27,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,5" style="background-color: transparent"  onclick="clicked('27,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,6" style="background-color: transparent"  onclick="clicked('27,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,7" style="background-color: transparent"  onclick="clicked('27,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,8" style="background-color: transparent"  onclick="clicked('27,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,9" style="background-color: transparent"  onclick="clicked('27,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,10" style="background-color: transparent"  onclick="clicked('27,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,11" style="background-color: transparent"  onclick="clicked('27,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,12" style="background-color: transparent"  onclick="clicked('27,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,13" style="background-color: transparent"  onclick="clicked('27,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,14" style="background-color: transparent"  onclick="clicked('27,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,15" style="background-color: transparent"  onclick="clicked('27,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,16" style="background-color: transparent"  onclick="clicked('27,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,17" style="background-color: transparent"  onclick="clicked('27,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,18" style="background-color: transparent"  onclick="clicked('27,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,19" style="background-color: transparent"  onclick="clicked('27,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,20" style="background-color: transparent"  onclick="clicked('27,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,21" style="background-color: transparent"  onclick="clicked('27,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,22" style="background-color: transparent"  onclick="clicked('27,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,23" style="background-color: transparent"  onclick="clicked('27,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,24" style="background-color: transparent"  onclick="clicked('27,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,25" style="background-color: transparent"  onclick="clicked('27,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,26" style="background-color: transparent"  onclick="clicked('27,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,27" style="background-color: transparent"  onclick="clicked('27,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,28" style="background-color: transparent"  onclick="clicked('27,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,29" style="background-color: transparent"  onclick="clicked('27,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,30" style="background-color: transparent"  onclick="clicked('27,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,31" style="background-color: transparent"  onclick="clicked('27,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="27,32" style="background-color: transparent"  onclick="clicked('27,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">28</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="28,1" style="background-color: transparent"  onclick="clicked('28,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,2" style="background-color: transparent"  onclick="clicked('28,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,3" style="background-color: transparent"  onclick="clicked('28,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,4" style="background-color: transparent"  onclick="clicked('28,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,5" style="background-color: transparent"  onclick="clicked('28,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,6" style="background-color: transparent"  onclick="clicked('28,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,7" style="background-color: transparent"  onclick="clicked('28,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,8" style="background-color: transparent"  onclick="clicked('28,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,9" style="background-color: transparent"  onclick="clicked('28,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,10" style="background-color: transparent"  onclick="clicked('28,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,11" style="background-color: transparent"  onclick="clicked('28,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,12" style="background-color: transparent"  onclick="clicked('28,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,13" style="background-color: transparent"  onclick="clicked('28,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,14" style="background-color: transparent"  onclick="clicked('28,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,15" style="background-color: transparent"  onclick="clicked('28,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,16" style="background-color: transparent"  onclick="clicked('28,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,17" style="background-color: transparent"  onclick="clicked('28,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,18" style="background-color: transparent"  onclick="clicked('28,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,19" style="background-color: transparent"  onclick="clicked('28,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,20" style="background-color: transparent"  onclick="clicked('28,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,21" style="background-color: transparent"  onclick="clicked('28,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,22" style="background-color: transparent"  onclick="clicked('28,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,23" style="background-color: transparent"  onclick="clicked('28,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,24" style="background-color: transparent"  onclick="clicked('28,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,25" style="background-color: transparent"  onclick="clicked('28,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,26" style="background-color: transparent"  onclick="clicked('28,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,27" style="background-color: transparent"  onclick="clicked('28,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,28" style="background-color: transparent"  onclick="clicked('28,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,29" style="background-color: transparent"  onclick="clicked('28,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,30" style="background-color: transparent"  onclick="clicked('28,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,31" style="background-color: transparent"  onclick="clicked('28,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="28,32" style="background-color: transparent"  onclick="clicked('28,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">29</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="29,1" style="background-color: transparent"  onclick="clicked('29,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,2" style="background-color: transparent"  onclick="clicked('29,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,3" style="background-color: transparent"  onclick="clicked('29,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,4" style="background-color: transparent"  onclick="clicked('29,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,5" style="background-color: transparent"  onclick="clicked('29,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,6" style="background-color: transparent"  onclick="clicked('29,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,7" style="background-color: transparent"  onclick="clicked('29,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,8" style="background-color: transparent"  onclick="clicked('29,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,9" style="background-color: transparent"  onclick="clicked('29,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,10" style="background-color: transparent"  onclick="clicked('29,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,11" style="background-color: transparent"  onclick="clicked('29,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,12" style="background-color: transparent"  onclick="clicked('29,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,13" style="background-color: transparent"  onclick="clicked('29,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,14" style="background-color: transparent"  onclick="clicked('29,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,15" style="background-color: transparent"  onclick="clicked('29,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,16" style="background-color: transparent"  onclick="clicked('29,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,17" style="background-color: transparent"  onclick="clicked('29,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,18" style="background-color: transparent"  onclick="clicked('29,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,19" style="background-color: transparent"  onclick="clicked('29,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,20" style="background-color: transparent"  onclick="clicked('29,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,21" style="background-color: transparent"  onclick="clicked('29,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,22" style="background-color: transparent"  onclick="clicked('29,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,23" style="background-color: transparent"  onclick="clicked('29,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,24" style="background-color: transparent"  onclick="clicked('29,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,25" style="background-color: transparent"  onclick="clicked('29,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,26" style="background-color: transparent"  onclick="clicked('29,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,27" style="background-color: transparent"  onclick="clicked('29,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,28" style="background-color: transparent"  onclick="clicked('29,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,29" style="background-color: transparent"  onclick="clicked('29,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,30" style="background-color: transparent"  onclick="clicked('29,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,31" style="background-color: transparent"  onclick="clicked('29,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="29,32" style="background-color: transparent"  onclick="clicked('29,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">30</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="30,1" style="background-color: transparent"  onclick="clicked('30,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,2" style="background-color: transparent"  onclick="clicked('30,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,3" style="background-color: transparent"  onclick="clicked('30,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,4" style="background-color: transparent"  onclick="clicked('30,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,5" style="background-color: transparent"  onclick="clicked('30,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,6" style="background-color: transparent"  onclick="clicked('30,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,7" style="background-color: transparent"  onclick="clicked('30,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,8" style="background-color: transparent"  onclick="clicked('30,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,9" style="background-color: transparent"  onclick="clicked('30,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,10" style="background-color: transparent"  onclick="clicked('30,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,11" style="background-color: transparent"  onclick="clicked('30,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,12" style="background-color: transparent"  onclick="clicked('30,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,13" style="background-color: transparent"  onclick="clicked('30,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,14" style="background-color: transparent"  onclick="clicked('30,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,15" style="background-color: transparent"  onclick="clicked('30,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,16" style="background-color: transparent"  onclick="clicked('30,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,17" style="background-color: transparent"  onclick="clicked('30,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,18" style="background-color: transparent"  onclick="clicked('30,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,19" style="background-color: transparent"  onclick="clicked('30,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,20" style="background-color: transparent"  onclick="clicked('30,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,21" style="background-color: transparent"  onclick="clicked('30,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,22" style="background-color: transparent"  onclick="clicked('30,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,23" style="background-color: transparent"  onclick="clicked('30,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,24" style="background-color: transparent"  onclick="clicked('30,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,25" style="background-color: transparent"  onclick="clicked('30,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,26" style="background-color: transparent"  onclick="clicked('30,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,27" style="background-color: transparent"  onclick="clicked('30,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,28" style="background-color: transparent"  onclick="clicked('30,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,29" style="background-color: transparent"  onclick="clicked('30,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,30" style="background-color: transparent"  onclick="clicked('30,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,31" style="background-color: transparent"  onclick="clicked('30,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="30,32" style="background-color: transparent"  onclick="clicked('30,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">31</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="31,1" style="background-color: transparent"  onclick="clicked('31,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,2" style="background-color: transparent"  onclick="clicked('31,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,3" style="background-color: transparent"  onclick="clicked('31,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,4" style="background-color: transparent"  onclick="clicked('31,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,5" style="background-color: transparent"  onclick="clicked('31,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,6" style="background-color: transparent"  onclick="clicked('31,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,7" style="background-color: transparent"  onclick="clicked('31,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,8" style="background-color: transparent"  onclick="clicked('31,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,9" style="background-color: transparent"  onclick="clicked('31,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,10" style="background-color: transparent"  onclick="clicked('31,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,11" style="background-color: transparent"  onclick="clicked('31,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,12" style="background-color: transparent"  onclick="clicked('31,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,13" style="background-color: transparent"  onclick="clicked('31,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,14" style="background-color: transparent"  onclick="clicked('31,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,15" style="background-color: transparent"  onclick="clicked('31,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,16" style="background-color: transparent"  onclick="clicked('31,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,17" style="background-color: transparent"  onclick="clicked('31,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,18" style="background-color: transparent"  onclick="clicked('31,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,19" style="background-color: transparent"  onclick="clicked('31,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,20" style="background-color: transparent"  onclick="clicked('31,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,21" style="background-color: transparent"  onclick="clicked('31,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,22" style="background-color: transparent"  onclick="clicked('31,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,23" style="background-color: transparent"  onclick="clicked('31,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,24" style="background-color: transparent"  onclick="clicked('31,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,25" style="background-color: transparent"  onclick="clicked('31,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,26" style="background-color: transparent"  onclick="clicked('31,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,27" style="background-color: transparent"  onclick="clicked('31,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,28" style="background-color: transparent"  onclick="clicked('31,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,29" style="background-color: transparent"  onclick="clicked('31,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,30" style="background-color: transparent"  onclick="clicked('31,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,31" style="background-color: transparent"  onclick="clicked('31,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="31,32" style="background-color: transparent"  onclick="clicked('31,32');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="leftSide">32</div>
+				</td>
+				<td>
+					<div class="middleLeft" id="32,1" style="background-color: transparent"  onclick="clicked('32,1');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,2" style="background-color: transparent"  onclick="clicked('32,2');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,3" style="background-color: transparent"  onclick="clicked('32,3');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,4" style="background-color: transparent"  onclick="clicked('32,4');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,5" style="background-color: transparent"  onclick="clicked('32,5');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,6" style="background-color: transparent"  onclick="clicked('32,6');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,7" style="background-color: transparent"  onclick="clicked('32,7');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,8" style="background-color: transparent"  onclick="clicked('32,8');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,9" style="background-color: transparent"  onclick="clicked('32,9');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,10" style="background-color: transparent"  onclick="clicked('32,10');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,11" style="background-color: transparent"  onclick="clicked('32,11');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,12" style="background-color: transparent"  onclick="clicked('32,12');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,13" style="background-color: transparent"  onclick="clicked('32,13');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,14" style="background-color: transparent"  onclick="clicked('32,14');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,15" style="background-color: transparent"  onclick="clicked('32,15');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,16" style="background-color: transparent"  onclick="clicked('32,16');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,17" style="background-color: transparent"  onclick="clicked('32,17');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,18" style="background-color: transparent"  onclick="clicked('32,18');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,19" style="background-color: transparent"  onclick="clicked('32,19');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,20" style="background-color: transparent"  onclick="clicked('32,20');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,21" style="background-color: transparent"  onclick="clicked('32,21');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,22" style="background-color: transparent"  onclick="clicked('32,22');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,23" style="background-color: transparent"  onclick="clicked('32,23');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,24" style="background-color: transparent"  onclick="clicked('32,24');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,25" style="background-color: transparent"  onclick="clicked('32,25');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,26" style="background-color: transparent"  onclick="clicked('32,26');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,27" style="background-color: transparent"  onclick="clicked('32,27');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,28" style="background-color: transparent"  onclick="clicked('32,28');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,29" style="background-color: transparent"  onclick="clicked('32,29');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,30" style="background-color: transparent"  onclick="clicked('32,30');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,31" style="background-color: transparent"  onclick="clicked('32,31');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="32,32" style="background-color: transparent"  onclick="clicked('32,32');"></div>
+				</td>
+			</tr>
+		</table>
+		
+		<br></br>
+		
+		<div style="font-family:Giovanni-Book,serif">16 colours</div>
+		
+		<table id="colours" cellspacing="0" cellpadding="0">
+			<tr>
+				<td>
+					<div class="transparentTopLeft" id="colour1,0" style="background-color: transparent" onclick="colourPicker('transparent');"></div>
+				</td>
+				<td>
+					<div class="colourPickerTopLeft" id="colour1,1" style="background-color: #FFFFFF" onclick="colourPicker('#FFFFFF');"></div>
+				</td>
+				<td>
+					<div class="colourPickerTopRight" id="colour1,2" style="background-color: #FBF305" onclick="colourPicker('#FBF305');"></div>
+				</td>
+				<td>
+					<div class="colourPickerTopRight" id="colour1,3" style="background-color: #FF6403" onclick="colourPicker('#FF6403');"></div>
+				</td>
+				<td>
+					<div class="colourPickerTopRight" id="colour1,4" style="background-color: #DD0907" onclick="colourPicker('#DD0907');"></div>
+				</td>
+				<td>
+					<div class="colourPickerTopRight" id="colour1,5" style="background-color: #F20884" onclick="colourPicker('#F20884');"></div>
+				</td>
+				<td>
+					<div class="colourPickerTopRight" id="colour1,6" style="background-color: #4700A5" onclick="colourPicker('#4700A5');"></div>
+				</td>
+				<td>
+					<div class="colourPickerTopRight" id="colour1,7" style="background-color: #0000D3" onclick="colourPicker('#0000D3');"></div>
+				</td>
+				<td>
+					<div class="colourPickerTopRight" id="colour1,8" style="background-color: #02ABEA" onclick="colourPicker('#02ABEA');"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="bottomRight" id="colour2,0"></div>
+				</td>
+				<td>
+					<div class="bottomLeft" id="colour2,1" style="background-color: #1FB714" onclick="colourPicker('#1FB714');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="colour2,2" style="background-color: #006412" onclick="colourPicker('#006412');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="colour2,3" style="background-color: #562C05" onclick="colourPicker('#562C05');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="colour2,4" style="background-color: #90713A" onclick="colourPicker('#90713A');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="colour2,5" style="background-color: #C0C0C0" onclick="colourPicker('#C0C0C0');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="colour2,6" style="background-color: #808080" onclick="colourPicker('#808080');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="colour2,7" style="background-color: #404040" onclick="colourPicker('#404040');"></div>
+				</td>
+				<td>
+					<div class="middleRight" id="colour2,8" style="background-color: #000000" onclick="colourPicker('#000000');"></div>
+				</td>
+			</tr>
+		</table>
+		
+		<br></br>
+
+		<div id="defaultButton" class="DefaultButtonOuter">
+			<div id="searchButton" class="ButtonInner" onclick="visualSearchButtonClicked();">
+				Visual Search
+			</div>
+		</div>
+		
+		<br></br>
+		
+		<div id="searchResults">
+		
+		</div>
+
+		<table>
+			<tr>
+				<td>
+					<div style="font-family:Giovanni-Book,serif">Text Search</div>
+				</td>
+				<td>
+					<textarea rows=2 columns=40 id="textSearchQueryArea" ></textarea>
+				</td>
+				<td>
+					<div id="exportButton" class="ButtonInner" onclick="textSearchButtonClicked();">
+						Text Search
+					</div>
+				</td>
+			</tr>
+		</table>
+
+
+		<table>
+			<tr>
+				<td>
+					<div style="font-family:Giovanni-Book,serif">CSV</div>
+				</td>
+				<td>
+					<div id="exportButton" class="ButtonInner" onclick="exportButtonClicked();">
+						Export
+					</div>
+				</td>
+				<td>
+					<textarea rows=2 columns=40 id="csvArea" ></textarea>
+				</td>
+			</tr>
+		</table>
+		
+	</body>
+	
+	<script>
+		
+		var currentColour = "transparent";
+		
+		var firstSearchResult = false;
+		var searchResultsFiles = [];
+		
+		function clicked(coordinates)
+		{
+			document.getElementById(coordinates).style.backgroundColor = currentColour;
+		
+			//alert(coordinates);
+		} // end function clicked
+
+
+		function colourPicker(newColour)
+		{
+			//alert(newColour);
+
+			currentColour = newColour;
+		
+		} // end function colourPicker
+		
+		
+		//Function to convert hex format to a rgb color, from https://stackoverflow.com/questions/1740700/how-to-get-hex-color-value-rather-than-rgb-value
+		function rgb2hex(rgb) {
+			 if (  rgb.search("rgb") == -1 ) {
+				  return rgb;
+			 }
+			 else if ( rgb == 'rgba(0, 0, 0, 0)' ) {
+				 return 'transparent';
+			 }
+			 else {
+				  rgb = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+))?\)$/);
+				  function hex(x) {
+					   return ("0" + parseInt(x).toString(16)).slice(-2);
+				  }
+				  return hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]); 
+			 }
+		}
+
+		function exportButtonClicked()
+		{
+			var iconCsv = "";
+			var thisPixelId = "1,1";
+			var thisPixelColour = "transparent";
+			var thisPixelHex = "";
+			
+			for (var currentRow = 1; currentRow <= 32; currentRow++)
+			{
+				for (var currentColumn = 1; currentColumn <= 32; currentColumn++)
+				{
+					thisPixelId = currentRow + "," + currentColumn;
+					
+					thisPixelColour = document.getElementById(thisPixelId).style.backgroundColor;
+					
+					thisPixelHex = rgb2hex(thisPixelColour);
+					
+					iconCsv = iconCsv + "#" + thisPixelHex + ",";
+				} // end for every column
+				
+				iconCsv = iconCsv + "\n";
+				
+			} // end for every row
+			
+			document.getElementById("csvArea").value = iconCsv;
+			
+		} // end function exportButtonClicked
+		
+		// contains - Does thisText contain searchString?
+		function contains(thisText, searchString)
+		{
+			//debugLog("contains(" + thisText + "," + searchString + ")");
+
+			if (thisText == null)
+			{
+				return false;
+			}
+			
+			return thisText.indexOf(searchString) != -1;
+		} // end function contains
+		
+		
+		function displaySearchResults(searchResultsFiles)
+		{
+			var resultsHtml = "<table><tr>";
+			
+			var numberFilenames = searchResultsFiles.length;
+			
+			for (var currentFilename = 0; currentFilename < numberFilenames; currentFilename++)
+			{
+				var thisFilename = searchResultsFiles[currentFilename];
+			
+				if (thisFilename !== "")
+				{
+					resultsHtml = resultsHtml + "<td><img src=\"PNGs32x32x32/" + thisFilename + "\"></img></td>";
+				}
+				
+				if ((currentFilename % 10) == 1)
+				{
+					resultsHtml = resultsHtml + "</tr><tr>";
+				}
+				
+			} // end for every filename
+			
+			resultsHtml = resultsHtml + "</tr></table>";
+			
+			document.getElementById("searchResults").innerHTML = resultsHtml;
+			
+		} // end function displaySearchResults
+		
+
+		function searchPixelValuesFiles(pixelValuesFiles)
+		{
+			var xmlhttp = new XMLHttpRequest();
+
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState == XMLHttpRequest.DONE ) {
+				   if (xmlhttp.status == 200) 
+				   {
+						
+						var theseFilenames = xmlhttp.responseText;
+						
+						
+						if (firstSearchResult == true)
+						{
+							// For the first known pixel value, add every filename
+							
+							var theseFilenamesArray = theseFilenames.split("\n");
+						
+							var numberFilenames = theseFilenamesArray.length;
+						
+							for (var currentFilename = 0; currentFilename < numberFilenames; currentFilename++)
+							{
+								var thisFilename = theseFilenamesArray[currentFilename];
+							
+								searchResultsFiles.push(thisFilename);							
+							} // end for every filename
+							
+							firstSearchResult = false;
+							
+						} else {
+							// For other pixels, trim down the search results for only the overlap
+							
+							var numberFilenames = searchResultsFiles.length;
+							
+							var overlapResults = [];
+							
+							for (var currentFilename = 0; currentFilename < numberFilenames; currentFilename++)
+							{
+								var thisFilename = searchResultsFiles[currentFilename];
+								
+								if (contains(theseFilenames,thisFilename+"\n") == true)
+								{
+									overlapResults.push(thisFilename);
+								} // end if the filename overlaps
+							} // end for every filename
+							
+							searchResultsFiles = overlapResults;
+						
+						} // end if it's the first file searched
+						
+						
+						if (pixelValuesFiles.length > 0)
+						{
+							searchPixelValuesFiles(pixelValuesFiles);
+						} else {
+							//console.log(searchResultsFiles);
+							
+							displaySearchResults(searchResultsFiles);
+							
+						}
+						
+				   } // end if it loaded the KML
+				   else if (xmlhttp.status == 400) {
+					  alert('error loading pixel value file');
+				   }
+				   else if (xmlhttp.status == 404) {
+					  searchResultsFiles = [];
+				   }
+				   else {
+					   alert('error loading pixel value file');
+				   }
+				}
+			};
+			
+			var filename = pixelValuesFiles.pop();
+			
+			xmlhttp.open("GET", filename, true);
+			xmlhttp.send();
+				
+		} // end function searchPixelValuesFiles
+		
+		function visualSearchButtonClicked()
+		{
+			// Find the files to load
+			var pixelValuesFiles = [];
+			var thisFilename = "";
+
+			var thisPixelId = "1,1";
+			var thisPixelColour = "transparent";
+			var thisPixelHex = "";
+			
+			for (var currentRow = 1; currentRow <= 32; currentRow++)
+			{
+				for (var currentColumn = 1; currentColumn <= 32; currentColumn++)
+				{
+					thisPixelId = currentRow + "," + currentColumn;
+					
+					thisPixelColour = document.getElementById(thisPixelId).style.backgroundColor;
+					
+					thisPixelHex = rgb2hex(thisPixelColour);
+					
+					
+					// Don't search for transparent (default) pixels
+					if (thisPixelHex !== "transparent")
+					{
+						// Don't search for opacity
+						thisPixelHex = thisPixelHex + "FF";
+						
+						var columnFolder = currentColumn - 1;
+						var rowFolder = currentRow - 1;
+						
+						thisFilename = "pixelValues_16colours/" + columnFolder + "/" + rowFolder + "/" + thisPixelHex + ".txt";
+						pixelValuesFiles.push(thisFilename);
+					}
+					
+				} // end for every column
+				
+			} // end for every row
+			
+			// Clear search results
+			document.getElementById("searchResults").innerHTML = "";
+			searchResultsFiles = [];
+			firstSearchResult = true;
+			searchPixelValuesFiles(pixelValuesFiles);
+			
+		} // end function visualSearchButtonClicked
+		
+		function textSearchButtonClicked()
+		{
+			var xmlhttp = new XMLHttpRequest();
+
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState == XMLHttpRequest.DONE ) {
+				   if (xmlhttp.status == 200) 
+				   {
+						
+						var allFilenames = xmlhttp.responseText;
+						
+						var textSearchQuery = document.getElementById("textSearchQueryArea").value;
+						
+						var searchRegexString = "^";
+						searchRegexString = searchRegexString + "(.*" + textSearchQuery + ".*)";
+						searchRegexString = searchRegexString + "$";
+						var searchRegex = new RegExp(searchRegexString, "gm");
+						
+						var searchResultsFiles = allFilenames.match(searchRegex);
+						
+						if (searchResultsFiles !== null)
+						{
+							if (searchResultsFiles.length > 0)
+							{
+							
+								displaySearchResults(searchResultsFiles);
+							
+							}
+						}
+						
+				   } // end if it loaded the KML
+				   else if (xmlhttp.status == 400) {
+					  alert('error loading filenames');
+				   }
+				   else if (xmlhttp.status == 404) {
+					  searchResultsFiles = [];
+				   }
+				   else {
+					   alert('error loading filenames');
+				   }
+				}
+			};
+			
+			xmlhttp.open("GET", "pixelValues_16coloursFilesUniq.txt", true);
+			xmlhttp.send();
+
+			// Clear the results
+			var resultsHtml = "<table><tr>" + "</tr></table>";
+			document.getElementById("searchResults").innerHTML = resultsHtml;
+
+		} // end function textSearchButtonClicked
+				
+	</script>
+
+</html>

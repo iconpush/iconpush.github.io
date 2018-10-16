@@ -1,0 +1,54 @@
+										 	.1_32x32x32 5.png
+aim app_32x32x32.png
+Back.gif_32x32x32 2.png
+Ballet_32x32x32.png
+Book ◊_32x32x32.png
+cfs_32x32x32.png
+chang_32x32x32.png
+City Factories_32x32x32.png
+Dancers 1_32x32x32.png
+Desert 2_32x32x32.png
+Empty Trash(Cube)_32x32x32.png
+ent_32x32x32.png
+epicu_32x32x32.png
+explorer cd_32x32x32.png
+Floppies_32x32x32 2.png
+Graduation 1_32x32x32.png
+iBook OS (Graphite) 43_32x32x32.png
+iBook OS (Graphite) 45_32x32x32.png
+Laser Printer 2_32x32x32 2.png
+leonardo da vinci recycle empty_32x32x32.png
+leonardo da vinci recycle full_32x32x32.png
+linux10.ico_32x32x32.png
+linux11.ico_32x32x32.png
+Log In.icns_32x32x32.png
+M Suede [Movie]_32x32x32.png
+Man in Jungle 2_32x32x32.png
+messenger window_32x32x32.png
+Micro_32x32x32.png
+more windows recycle empty_32x32x32.png
+more windows recycle full_32x32x32.png
+Movies 3_32x32x32.png
+msg compose window_32x32x32.png
+mtv_32x32x32 2.png
+pc dvd_32x32x32.png
+Photonica 1.0.1 50_32x32x32.png
+Photonica 1.0.1 52_32x32x32.png
+Pluto (black)_32x32x32.png
+Pluto_32x32x32 2.png
+PY3  [graphite] 39_32x32x32.png
+Q Suede [Quicktime™]_32x32x32.png
+Recording, Keyboard_32x32x32.png
+snap_32x32x32.png
+Spider Web_32x32x32 2.png
+Star 2_32x32x32 2.png
+Sundae 1_32x32x32.png
+Symantec_32x32x32.png
+Thanks Cartoon_32x32x32.png
+the golden era recycle full_32x32x32.png
+Triple W Hood [Internet]_32x32x32.png
+Ukulele_32x32x32.png
+underwater recycle empty_32x32x32.png
+win cd_32x32x32.png
+windows 98 recycle full_32x32x32.png
+windows cd_32x32x32.png

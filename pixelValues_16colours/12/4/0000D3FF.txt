@@ -1,0 +1,19 @@
+4D First 1.2_32x32x32.png
+DD Expand 4.0 10_32x32x32.png
+DD Expand 4.0 3_32x32x32.png
+Desktop 40_32x32x32.png
+Desktop 42_32x32x32 2.png
+Draw +_32x32x32.png
+Evaluation FileMaker Pro 4.0 11_32x32x32.png
+kcs8_32x32x32.png
+MacPPP Timer 1.4.5_32x32x32.png
+Microsoft Excel 20_32x32x32.png
+Microsoft Office 98 12_32x32x32 2.png
+Microsoft Office 98 13_32x32x32.png
+Microsoft Query 3_32x32x32.png
+Microsoft Query 4_32x32x32.png
+Prime Target Demo 9_32x32x32.png
+Sokoban 2.0_32x32x32.png
+Visual Basic for Applications 5_32x32x32.png
+VSE Be Found 2.1 8_32x32x32.png
+WorldTime_32x32x32.png

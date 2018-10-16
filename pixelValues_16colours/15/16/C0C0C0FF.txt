@@ -1,0 +1,64 @@
+	  	_32x32x32 2.png
+ .pictClipping_32x32x32 2.png
+back of letter yellow_32x32x32.png
+badchangeColoursDialog.gif_32x32x32.png
+boardOperation.gif_32x32x32.png
+calendar_32x32x32 17.png
+changeColoursDialog.gif_32x32x32.png
+Computer 1_32x32x32 5.png
+crateOperation.gif_32x32x32.png
+editor window_32x32x32 2.png
+ent_32x32x32.png
+Eudora 65_32x32x32.png
+FontViewer 1.4 2_32x32x32.png
+front of envelope_32x32x32.png
+house_32x32x32 8.png
+howToChangeBackgnColour.gif_32x32x32.png
+iBook Blueberry.1_32x32x32 2.png
+iBook Blueberry_32x32x32 5.png
+iBook Graphite.1_32x32x32.png
+iBook Graphite_32x32x32 3.png
+iBook Indigo.1_32x32x32 2.png
+iBook Indigo_32x32x32 5.png
+iBook Key Lime.1_32x32x32 2.png
+iBook Key Lime_32x32x32 3.png
+iBook Tangerine_32x32x32 6.png
+iBook Tangerine_32x32x32 7.png
+MacpireSet Pieces.gif_32x32x32.png
+managerConfigurationWindow.gif_32x32x32.png
+Microchip_32x32x32.png
+more windows recycle empty_32x32x32.png
+more windows recycle full_32x32x32.png
+Movable Bar_32x32x32.png
+msg compose window_32x32x32.png
+nascar2_32x32x32.png
+no people_32x32x32.png
+Owl_32x32x32 4.png
+PC pdf_32x32x32.png
+PDF_32x32x32.png
+Pegasus_32x32x32.png
+people letter_32x32x32.png
+people?_32x32x32.png
+person 2_32x32x32 2.png
+person running 2_32x32x32.png
+person_32x32x32 4.png
+Picture 26_32x32x32.png
+Picture 8_32x32x32.png
+Picture 9_32x32x32.png
+pinned-up note 2_32x32x32.png
+Plath's Pig_32x32x32.png
+Plug 2_32x32x32.png
+Plug 5_32x32x32.png
+post it_32x32x32.png
+profile window_32x32x32 2.png
+Quicktime Installer_32x32x32 4.png
+roomCtrlPanel.gif_32x32x32.png
+saveChanges.gif_32x32x32.png
+supplyOperation.gif_32x32x32.png
+SwitchRes Control 5_32x32x32 2.png
+Temperature, Hot_32x32x32 2.png
+TESTFI~1.GIF_32x32x32.png
+underwater recycle full_32x32x32.png
+Unknown Error.bmp_32x32x32.png
+vMonConfig.gif_32x32x32.png
+yes people_32x32x32.png

@@ -1,0 +1,49 @@
+aim app_32x32x32.png
+aimster x_32x32x32.png
+baseball recycle empty_32x32x32.png
+baseball recycle full_32x32x32.png
+blue battery_32x32x32.png
+Bottle_32x32x32 7.png
+Car 4_32x32x32.png
+cfs_32x32x32.png
+chang_32x32x32.png
+CIM Data 163_32x32x32.png
+CIM Data 164_32x32x32.png
+cnn_32x32x32 2.png
+Computer Work_32x32x32 2.png
+DO NOT COPY (Use Installer) 21_32x32x32.png
+Elephant 2_32x32x32 3.png
+Festive 2_32x32x32.png
+Financial_32x32x32.png
+Flowers 2_32x32x32 2.png
+fort_32x32x32.png
+Gas Nozzle_32x32x32.png
+Gift Box 8_32x32x32.png
+Gounda Takeshi_32x32x32.png
+hold tick tick_32x32x32.png
+iBook OS (Graphite) 9_32x32x32.png
+Letters_32x32x32 6.png
+Log In.icns_32x32x32.png
+messenger window_32x32x32.png
+more windows recycle empty_32x32x32.png
+more windows recycle full_32x32x32.png
+New York City 1_32x32x32 2.png
+news_32x32x32 8.png
+Outlook Express 71_32x32x32 2.png
+Pen & Paper_32x32x32.png
+Penguin 2_32x32x32 3.png
+people letter_32x32x32.png
+Phone 3_32x32x32 3.png
+Picnic_32x32x32.png
+Sewing, Thread_32x32x32.png
+Sierra_32x32x32 3.png
+Sweater_32x32x32.png
+Tern_32x32x32.png
+the golden era recycle full_32x32x32.png
+TrueDoc_32x32x32.png
+Ukulele_32x32x32.png
+win cd_32x32x32.png
+windows 98 recycle empty_32x32x32.png
+windows 98 recycle full_32x32x32.png
+windows cd_32x32x32.png
+yes letter_32x32x32.png

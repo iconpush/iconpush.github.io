@@ -1,0 +1,50 @@
+<Data Fork>_32x32x32.png
+abcardwindow_32x32x32.png
+aim app_32x32x32.png
+Back.gif_32x32x32 2.png
+Bass Player_32x32x32.png
+Bathtub_32x32x32.png
+Birthday Cake 1_32x32x32.png
+Calculator & Paper_32x32x32.png
+cd and mindstorms controller_32x32x32.png
+cnn_32x32x32 2.png
+cnnsi_32x32x32.png
+Computer 2_32x32x32 5.png
+data_32x32x32 13.png
+DiskTracker 1.1.3 32_32x32x32.png
+editor window_32x32x32 2.png
+enuk990_32x32x32.png
+Fax Machine_32x32x32 3.png
+Gardening 2_32x32x32.png
+Horse 2_32x32x32.png
+Hospital 1_32x32x32.png
+Jazz Group_32x32x32.png
+Jet 1_32x32x32.png
+Kids Running_32x32x32.png
+Marquee 1_32x32x32.png
+messenger window_32x32x32.png
+Modem_32x32x32 7.png
+more windows recycle empty_32x32x32.png
+more windows recycle full_32x32x32.png
+Movable Bar_32x32x32.png
+mtv_32x32x32 2.png
+Office 2001_32x32x32.png
+Paper Burnt_32x32x32 2.png
+Paris 1_32x32x32.png
+pc dvd_32x32x32.png
+pcn_32x32x32.png
+Pen & Paper_32x32x32.png
+peopl_32x32x32.png
+Plane 4_32x32x32.png
+Power Lines_32x32x32 2.png
+profile window_32x32x32 2.png
+smile_32x32x32 5.png
+Star 1_32x32x32 2.png
+Star 2_32x32x32 2.png
+Star 6_32x32x32.png
+Tiger 1_32x32x32.png
+Trash Full_32x32x32 11.png
+warner bros_32x32x32 2.png
+Wheelchair_32x32x32.png
+win 98 network neighbourhood_32x32x32.png
+windows 98 my computer_32x32x32.png

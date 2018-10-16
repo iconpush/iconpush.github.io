@@ -1,0 +1,68 @@
+											  	 _32x32x32 2.png
+"Blueberry"_32x32x32.png
+"Graphaite"_32x32x32.png
+"Indigo"_32x32x32.png
+"KeyLime"_32x32x32.png
+"Tangerine"_32x32x32.png
+6S_32x32x32.png
+7S_32x32x32.png
+8S_32x32x32.png
+AXELedge 1.5.3_32x32x32.png
+badchangeColoursDialog.gif_32x32x32.png
+boardOperation.gif_32x32x32.png
+buttonWizard.gif_32x32x32.png
+changeColoursDialog.gif_32x32x32.png
+Computer 1_32x32x32 5.png
+crateOperation.gif_32x32x32.png
+editor window_32x32x32 2.png
+English Thesaurus 3_32x32x32.png
+fort_32x32x32.png
+front of envelope_32x32x32.png
+howToChangeBackgnColour.gif_32x32x32.png
+i 2_32x32x32.png
+i_32x32x32 8.png
+iBook Icons_32x32x32.png
+IV_32x32x32 2.png
+Jet 1_32x32x32.png
+linux5.ico_32x32x32.png
+MacpireSet Pieces.gif_32x32x32.png
+managerConfigurationWindow.gif_32x32x32.png
+messenger window_32x32x32.png
+more windows my computer_32x32x32.png
+more windows recycle empty_32x32x32.png
+more windows recycle full_32x32x32.png
+Movable Bar_32x32x32.png
+msg compose window_32x32x32.png
+Mug_32x32x32.png
+nascar2_32x32x32.png
+news_32x32x32 8.png
+no people_32x32x32.png
+Not Sent_32x32x32.png
+Paper Burnt_32x32x32 2.png
+PC pdf_32x32x32.png
+PDF_32x32x32.png
+people letter_32x32x32.png
+people?_32x32x32.png
+person 2_32x32x32 2.png
+person running_32x32x32.png
+person_32x32x32 4.png
+Picture 25_32x32x32.png
+Picture 26_32x32x32.png
+Picture 8_32x32x32.png
+pinned-up note 2_32x32x32.png
+Plug 2_32x32x32.png
+post it_32x32x32.png
+reuse calendar_32x32x32.png
+saveChanges.gif_32x32x32.png
+space my computer_32x32x32.png
+supplyOperation.gif_32x32x32.png
+TESTFI~1.GIF_32x32x32.png
+textFieldWizard.gif_32x32x32.png
+Toolbar 142_32x32x32.png
+TracePrefs.gif_32x32x32.png
+underwater recycle empty_32x32x32.png
+Unknown Error.bmp_32x32x32.png
+vMonConfig.gif_32x32x32.png
+windows 98 recycle full_32x32x32.png
+windows cd_32x32x32.png
+yes people_32x32x32.png

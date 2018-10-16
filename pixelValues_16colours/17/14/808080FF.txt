@@ -1,0 +1,49 @@
+aol_32x32x32 6.png
+aol_32x32x32 9.png
+AppleGuideButton_32x32x32.png
+Arrow Up_32x32x32.png
+Atom Hearth Mother_32x32x32.png
+Ballet_32x32x32.png
+Birthday Cartoon 2_32x32x32.png
+Business Talk_32x32x32.png
+Champagne Glasses_32x32x32 2.png
+cnnsi_32x32x32.png
+Coliseum_32x32x32 2.png
+Computer Work_32x32x32 2.png
+Conference_32x32x32 4.png
+data_32x32x32 13.png
+Doraemon_32x32x32.png
+editor window_32x32x32 2.png
+enuk990_32x32x32.png
+explorer cd_32x32x32.png
+Family Dinner_32x32x32.png
+Fax Machine_32x32x32 3.png
+fort_32x32x32.png
+Garden, Hoe_32x32x32.png
+iBook OS (Graphite) 43_32x32x32.png
+iBook OS (Graphite) 45_32x32x32.png
+Italy_32x32x32 5.png
+Jet 1_32x32x32.png
+Locked Door_32x32x32.png
+Mailbox_32x32x32 21.png
+Monkey in Tree_32x32x32.png
+more windows recycle empty_32x32x32.png
+Movies 1_32x32x32.png
+msg compose window_32x32x32.png
+New York City 1_32x32x32 2.png
+New York City 2_32x32x32.png
+OE_32x32x32.png
+Pen & Paper_32x32x32.png
+peopl_32x32x32.png
+people letter_32x32x32.png
+people?_32x32x32.png
+Phone Symbol_32x32x32.png
+School Bus_32x32x32 2.png
+Skiing, Cross-Country_32x32x32.png
+Tile, Metal_32x32x32 2.png
+TrueDoc_32x32x32.png
+win cd_32x32x32.png
+windows 98 recycle empty_32x32x32.png
+yes people_32x32x32.png
+zdnet_32x32x32 2.png
+Zebra_32x32x32 5.png

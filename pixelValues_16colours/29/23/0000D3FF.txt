@@ -1,0 +1,3 @@
+Claris Support_32x32x32.png
+Dutch_32x32x32.png
+Localized.rsrc_32x32x32.png

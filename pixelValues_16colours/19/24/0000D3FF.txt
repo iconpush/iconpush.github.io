@@ -1,0 +1,27 @@
+Claris Support_32x32x32.png
+DD Expand 4.0 3_32x32x32.png
+Desktop 18_32x32x32 20.png
+Desktop 42_32x32x32 2.png
+Dutch_32x32x32.png
+GrayBox 0.3 4_32x32x32.png
+GrayBox 0.3 5_32x32x32.png
+GrayBox 0.3 6_32x32x32.png
+Invert_32x32x32.png
+Microsoft Excel 20_32x32x32.png
+Opaque Mode_32x32x32.png
+PICT Only Edition_32x32x32.png
+PowerReplace 6.3_32x32x32.png
+RandomDot_32x32x32.png
+Register By Mail 2_32x32x32.png
+ScreenFlip 2_32x32x32.png
+ScreenFlip 3_32x32x32.png
+ScreenFlip 4_32x32x32.png
+ScreenFlip 5_32x32x32.png
+ScreenFlip 6_32x32x32.png
+ScreenFlip 7_32x32x32.png
+ScreenFlip 8_32x32x32.png
+ScreenFlip 9_32x32x32.png
+ScreenFlip_32x32x32.png
+Word 6.0 iCon_32x32x32.png
+WorldTime_32x32x32.png
+◊CopyPaste 4.3.2 20_32x32x32.png

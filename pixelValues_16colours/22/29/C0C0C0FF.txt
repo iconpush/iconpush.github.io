@@ -1,0 +1,18 @@
+Clipped World_32x32x32.png
+data_32x32x32 13.png
+Family Disk_48x48x32 2.png
+Hardware, Screw_32x32x32.png
+heat_32x32x32 3.png
+Mac GLQuake README_32x32x32.png
+msn.1_32x32x32.png
+msn_32x32x32 4.png
+nyt_32x32x32.png
+PC pdf_32x32x32.png
+PDF_32x32x32.png
+REALbasic® 3.2 PPC 8_32x32x32.png
+Sierra_32x32x32 3.png
+Silver Donut_32x32x32.png
+win 98 network neighbourhood_32x32x32.png
+windows 98 my computer_32x32x32.png
+Word 4 Document_32x32x32.png
+zdnet_32x32x32 2.png

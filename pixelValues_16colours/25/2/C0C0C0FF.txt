@@ -1,0 +1,12 @@
+hold tick tick_32x32x32.png
+Mexico 1_32x32x32.png
+no people_32x32x32.png
+no setup_32x32x32.png
+people book 3.5_32x32x32.png
+QuickTime Player.1_32x32x32.png
+setup_32x32x32 8.png
+Sierra_32x32x32 3.png
+Snake in Tree_32x32x32.png
+yes people_32x32x32.png
+zdnet_32x32x32 2.png
+ZIPDR_32x32x32.png

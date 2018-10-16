@@ -1,0 +1,54 @@
+Air Blow_32x32x32.png
+Atom Hearth Mother_32x32x32.png
+audio_32x32x32 6.png
+Banner, Hearts_32x32x32.png
+baseball recycle empty_32x32x32.png
+Bones_32x32x32 2.png
+Book ◊_32x32x32.png
+Business Meeting_32x32x32.png
+Cityscape 2_32x32x32.png
+Cityscape 3_32x32x32.png
+Conference_32x32x32 4.png
+data_32x32x32 13.png
+Duck 2_32x32x32.png
+editor window_32x32x32 2.png
+explorer cd_32x32x32.png
+Festive 1_32x32x32.png
+fone->letter_32x32x32.png
+Food Groups_32x32x32.png
+Hospital 2_32x32x32.png
+Letters_32x32x32 6.png
+Man in Jungle 1_32x32x32.png
+Man in Jungle 2_32x32x32.png
+Many Drives_32x32x32.png
+Movies 3_32x32x32.png
+msg compose window_32x32x32.png
+New York City 1_32x32x32 2.png
+nyt_32x32x32.png
+open door_32x32x32 2.png
+Origami Horse_32x32x32 2.png
+Party Animal_32x32x32.png
+pc dvd_32x32x32.png
+Pen & Paper_32x32x32.png
+Penguin 2_32x32x32 3.png
+people?_32x32x32.png
+Phone 1_32x32x32 4.png
+Phone 3_32x32x32 3.png
+Pocketknife_32x32x32.png
+post it_32x32x32.png
+profile window_32x32x32 2.png
+quick_32x32x32 2.png
+Quicktime Installer_32x32x32 4.png
+Smoking Pipe 1_32x32x32.png
+space recycle full_32x32x32.png
+Swirl_32x32x32 3.png
+Tea for Two_32x32x32.png
+Tiger 2_32x32x32.png
+Tile, Metal_32x32x32 2.png
+Toolbar 127_32x32x32.png
+TrueDoc_32x32x32.png
+win cd_32x32x32.png
+windows 98 recycle empty_32x32x32.png
+windows 98 recycle full_32x32x32.png
+yes people_32x32x32.png
+◊CopyPaste 4.3.2 10_32x32x32.png

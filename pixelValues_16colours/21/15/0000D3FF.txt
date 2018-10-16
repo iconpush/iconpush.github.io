@@ -1,0 +1,41 @@
+Apple Seeding_32x32x32.png
+Area Chart_32x32x32.png
+Blend_32x32x32.png
+clut_32x32x32.png
+Desktop 109_32x32x32 3.png
+Desktop 40_32x32x32.png
+Desktop 42_32x32x32 2.png
+Invert_32x32x32.png
+Microsoft Clip Gallery 3_32x32x32.png
+Microsoft Office 98 15_32x32x32.png
+Microsoft Office Manager 2_32x32x32.png
+Microsoft Office Manager 3_32x32x32.png
+Microsoft OLE Automation_32x32x32.png
+Microsoft Query 2_32x32x32.png
+Microsoft Query_32x32x32.png
+MyBattery 5_32x32x32.png
+MyBattery 6_32x32x32.png
+Outlook Express 5_32x32x32.png
+Pie Chart_32x32x32.png
+pltt_32x32x32.png
+ppt#_32x32x32 2.png
+Quicken Home Inventory 10_32x32x32.png
+READ THIS OR YOU WILL BE KILLED_32x32x32.png
+ScreenFlip 10_32x32x32.png
+ScreenFlip 11_32x32x32.png
+ScreenFlip 12_32x32x32.png
+ScreenFlip 13_32x32x32.png
+ScreenFlip 14_32x32x32.png
+ScreenFlip 15_32x32x32.png
+ScreenFlip 16_32x32x32.png
+ScreenFlip 2_32x32x32.png
+ScreenFlip 3_32x32x32.png
+ScreenFlip 4_32x32x32.png
+ScreenFlip 5_32x32x32.png
+ScreenFlip 6_32x32x32.png
+ScreenFlip 7_32x32x32.png
+ScreenFlip 8_32x32x32.png
+ScreenFlip 9_32x32x32.png
+Stacked Area_32x32x32.png
+WorldTime_32x32x32.png
+◊CopyPaste 4.3.2 3_32x32x32.png

@@ -1,0 +1,10 @@
+AppleExtra:MajorApplication_32x32x32.png
+hold tick tick_32x32x32.png
+hwood_32x32x32.png
+no people_32x32x32.png
+QuickTime_32x32x32 15.png
+re-do_32x32x32.png
+Sierra_32x32x32 3.png
+World Clock Deluxe_32x32x32.png
+yes people_32x32x32.png
+zdnet_32x32x32 2.png

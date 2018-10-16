@@ -1,0 +1,56 @@
+aim app_32x32x32.png
+Arrow Up_32x32x32.png
+Background Color_32x32x32.png
+Banner, Hearts_32x32x32.png
+baseball my computer_32x32x32.png
+baseball recycle empty_32x32x32.png
+blue battery_32x32x32.png
+Book ◊_32x32x32.png
+Bowl_32x32x32 4.png
+CIM Data 145_32x32x32.png
+Cityscape 2_32x32x32.png
+cnn_32x32x32 2.png
+Computer Work_32x32x32 2.png
+Cycle_32x32x32.png
+da vinci my computer_32x32x32.png
+dangerous creatures recycle mpt_32x32x32.png
+discovery_32x32x32 2.png
+explorer cd_32x32x32.png
+Festive 2_32x32x32.png
+fone->letter_32x32x32.png
+Gift Box 8_32x32x32.png
+Hide Selected_32x32x32.png
+hold tick tick_32x32x32.png
+Home 2_32x32x32.png
+Hospital 2_32x32x32.png
+iBook OS (Graphite) 9_32x32x32.png
+iVisit x_32x32x32.png
+linux10.ico_32x32x32.png
+linux11.ico_32x32x32.png
+linux2.ico_32x32x32.png
+Micro_32x32x32.png
+Monkey in Tree_32x32x32.png
+Netscape ◊_32x32x32.png
+New York City 1_32x32x32 2.png
+no people_32x32x32.png
+open door_32x32x32 2.png
+Owl_32x32x32 4.png
+Party Animal_32x32x32.png
+Pen & Paper_32x32x32.png
+Penguin 2_32x32x32 3.png
+people?_32x32x32.png
+pro_orb_32x32x32 2.png
+profile window_32x32x32 2.png
+Pterodactyl 2_32x32x32 2.png
+Search 16_32x32x32.png
+Sweater_32x32x32.png
+Synchronize! 15_32x32x32.png
+Tangerine_32x32x32 9.png
+TechTool Lite 3.0.1 24_32x32x32.png
+Tiger 1_32x32x32.png
+TrueDoc_32x32x32.png
+windows 98 recycle empty_32x32x32.png
+windows 98 recycle full_32x32x32.png
+Woman with Books_32x32x32.png
+yes letter_32x32x32.png
+yes people_32x32x32.png
